@@ -1,0 +1,14 @@
+{
+  "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.6-zeta-0.2",
+  "seed": 100,
+  "xi": 0.6,
+  "zeta": 0.2,
+  "best_validation_accuracy": 0.8595194220542908,
+  "best_validation_epoch": 178,
+  "cache_key": "e8093fc5d33410b2",
+  "selection_utc": "2026-11-01T03:47:05.853658+00:00",
+  "candidate_count": 16,
+  "protocol_sha256": "1b1b8b943b334d675ed2c81c1e68cd7d3a5473b4c79ac038d3631d8c8251bc09",
+  "criterion": "Highest best validation accuracy; ties: ascending xi, then ascending zeta.",
+  "test_evaluated_before_selection": false
+}

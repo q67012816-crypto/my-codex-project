@@ -1,0 +1,11 @@
+{
+  "result_records": 126,
+  "epoch_records": 76080,
+  "evaluation_files": 110,
+  "node_prediction_rows": 297880,
+  "unsupported_evaluations": [],
+  "notes": [
+    "Records include smoke/diagnostic runs; do not pool every row as independent paper trials.",
+    "No new inference. Grid candidate test metrics remain absent except selected/reference existing files."
+  ]
+}

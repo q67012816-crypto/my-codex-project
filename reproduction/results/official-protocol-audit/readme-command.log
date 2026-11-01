@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/my-codex-project/reproduction/runs/official-readme-20261101/source/exp.py", line 20, in <module>
+    from gnnutils import make_masks, train, test, add_original_graph, load_webkb, load_planetoid, load_wiki, load_bgp, \
+  File "/workspace/my-codex-project/reproduction/runs/official-readme-20261101/source/gnnutils.py", line 16, in <module>
+    from datasets import WebKB, FilmNetwork, BGP
+  File "/workspace/my-codex-project/reproduction/runs/official-readme-20261101/source/datasets/__init__.py", line 3, in <module>
+    from datasets.film import FilmNetwork
+  File "/workspace/my-codex-project/reproduction/runs/official-readme-20261101/source/datasets/film.py", line 7, in <module>
+    from torch_sparse import coalesce
+ModuleNotFoundError: No module named 'torch_sparse'

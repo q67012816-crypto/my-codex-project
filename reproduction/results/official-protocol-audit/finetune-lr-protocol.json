@@ -1,0 +1,14 @@
+{
+  "data_split_seed": 42,
+  "classifier_initialization_seed": 42001,
+  "learning_rates": [
+    0.0001,
+    0.001
+  ],
+  "finetune_epochs": 200,
+  "pretrained_checkpoint_sha256": "46cb9162f8b1890bf9b34bba967b1c8a37967015c285056acafb887d38589fe1",
+  "change": "Only fine-tuning learning rate differs between the two new arms; no repeated pretraining.",
+  "weight_decay": 1e-05,
+  "selection": "Best validation epoch; one test evaluation after each arm.",
+  "initialization_note": "Shared new classifier initialization; compare these two arms, not directly with the old seed42 classifier initialization."
+}

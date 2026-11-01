@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "seed": 42,
+  "pretrain_epochs": 500,
+  "finetune_epochs": 200,
+  "same_masks_config_cache_data": true,
+  "actual_flags_verified": true,
+  "reference_accuracy_percent": 83.5489809513092,
+  "control_accuracy_percent": 83.73382687568665,
+  "accuracy_difference_points": 0.1848459243774414,
+  "reference_delta_sp_percent": 5.5555555555555545,
+  "control_delta_sp_percent": 5.820105820105819,
+  "delta_sp_difference_points": 0.2645502645502642,
+  "interpretation": "One seed only; not a ten-run reproduction or an exact upstream training replay.",
+  "changes": "Transition mean and feature MSE replace the raw sum and unsquared flattened L2/N; fixed augmentation BCE unchanged."
+}

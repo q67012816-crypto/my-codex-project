@@ -1,0 +1,792 @@
+                                                    M ITIGATING D EGREE B IASES IN M ESSAGE PASSING
+                                                   M ECHANISM BY U TILIZING C OMMUNITY S TRUCTURES
+
+
+                                                                                  Van Thuy Hoang and O-Joun Lee†
+                                                                  Department of Artificial Intelligence, The Catholic University of Korea
+                                                                          Bucheon-si, Gyeonggi-do 14662, Republic of Korea
+arXiv:2312.16788v1 [cs.LG] 28 Dec 2023
+
+
+
+
+                                                                           {hoangvanthuy90,ojlee}@catholic.ac.kr
+
+
+
+
+                                                                                                A BSTRACT
+                                                    This study utilizes community structures to address node degree biases in message-passing (MP) via
+                                                    learnable graph augmentations and novel graph transformers. Recent augmentation-based methods
+                                                    showed that MP neural networks often perform poorly on low-degree nodes, leading to degree
+                                                    biases due to a lack of messages reaching low-degree nodes. Despite their success, most methods
+                                                    use heuristic or uniform random augmentations, which are non-differentiable and may not always
+                                                    generate valuable edges for learning representations. In this paper, we propose Community-aware
+                                                    Graph Transformers, namely CGT, to learn degree-unbiased representations based on learnable
+                                                    augmentations and graph transformers by extracting within community structures. We first design
+                                                    a learnable graph augmentation to generate more within-community edges connecting low-degree
+                                                    nodes through edge perturbation. Second, we propose an improved self-attention to learn underlying
+                                                    proximity and the roles of nodes within the community. Third, we propose a self-supervised learning
+                                                    task that could learn the representations to preserve the global graph structure and regularize the graph
+                                                    augmentations. Extensive experiments on various benchmark datasets showed CGT outperforms
+                                                    state-of-the-art baselines and significantly improves the node degree biases. The source code is
+                                                    available at https://github.com/NSLab-CUK/Community-aware-Graph-Transformer.
+
+                                         Keywords Degree Unbiases · Learnable Graph Augmentation · Graph Transformer · Graph Clustering · Graph
+                                         Representation Learning
+
+                                         1   Introduction
+                                         The message-passing (MP) mechanism has been widely used in Graph Neural Networks (GNNs) and achieved great
+                                         success in numerous domains [1]. GNNs learn representations for each target node through recursively receiving and
+                                         aggregating the messages from its neighbors. Thus, these GNNs primarily rely on the message information exchanged
+                                         between pairs of nodes to update representations.
+                                         One of the main problems in MP GNNs is that existing methods perform poorly on low-degree nodes, leading to degree
+                                         bias in graph learning [3, 4]. The degree bias originates from low-degree nodes having only a few neighbors, while
+                                         high-degree nodes have too many neighbors in most real-world graphs. Furthermore, due to the power law distribution,
+                                         most nodes in the graph have low degrees, while there are a few high-degree nodes. This issue can negatively affect
+                                         the MP GNNs’ ability to learn low- and high-degree nodes. First, low-degree nodes only receive a few messages
+                                         from neighborhoods, which could be biased or even under-represented in graph learning [5]. Second, high-degree
+                                         nodes receive excessive information, which may lead to inherent limitations of GNNs, such as over-smoothing and
+                                         over-squashing problems [6]. However, most recent GNNs overlook degree biases, which could cause unfairness and
+                                         poor performance in graph learning. To illustrate the problem, consider four low-degree nodes (1, 2, 3, and 4) in Figure
+                                         1(a). These nodes with few neighbors receive less information from the neighborhood compared with high-degree nodes
+                                         (blue nodes). As shown in Figure 1(b), the current graph transformer model, GT [2], performs poorly on low-degree
+                                         nodes on Cora, Photo, and Computers datasets.
+                                             †
+                                                 Correspondence: ojlee@catholic.ac.kr; Tel.: +82-2-2164-5516
+                        4                              4
+          3                                3
+      2                                2                     Community
+                   7                               7
+                                                             High-degree nodes
+  1       5                        1       5                 Low-degree nodes
+                   6                               6         Node features
+                                                             Adding edges
+                   MP on original graph
+                                                           X Removing edges                                                                        Cora
+                                                                                                  0.4                                              Photo
+
+
+
+
+                                                                                     Error rate
+                        4                              4
+      2
+              3
+                                       2
+                                               3                                                                                                   Computers
+                    7                              7                                              0.2
+                    X
+  1       5                        1       5
+                   6                               6                                              0.0
+                                                                                                              5       10      15       20        25        30
+                  MP on augmented graph
+                                                                                                                           Node degree
+ (a) Message passing (MP) on original/augmented graphs.                                                 (b) Misclassification rate of GT [2] method.
+Figure 1: Message Passing GNNs is agnostic to the node degrees, resulting in low performance on low-degree nodes.
+In (a), given an original graph (Above), low-degree nodes receive less information from the neighborhood, while
+high-degree nodes obtain too much information. After adding within-community edges for low-degree nodes and
+removing edges connecting high-degree nodes by graph augmentation (Below), each node could receive adequate
+information. In (b), low-degree nodes are more misclassified than high-degree nodes in the graph transformer model
+(GT [2]) on Cora, Photo, and Computers datasets.
+
+
+
+Because of the lack of messages, most recent studies have proposed augmentation-based strategies to provide more
+messages to low-degree nodes. Several methods, i.e., RGRL [4] and GRADE [7], combine the power of GCN and
+contrastive learning to learn representations via numerous views of the input graphs. These methods commonly
+create multiple views of the input graph via heuristic or uniform random augmentations and then optimize a GNN
+encoder by contrasting between positive and negative samples. However, the uniform random augmentations may not
+always generate valuable edges in different strategies [8]. Additionally, we argue that edges connecting nodes within
+communities are more significant than others, which has not been fully explored. For example, the uniform random
+augmentations may generate redundant edges, i.e., making fully connected graphs or removing too many edges, resulting
+in a loss of the graph structure. Other studies aim to capture more messages for each node by expanding the range of the
+neighborhood for each target node [2, 9, 10]. For example, SAT [11] extract the k-subgraph information to update the
+vector representations for each target node. However, these methods do not mainly solve the degree-unbiased problem
+[12, 13, 14]. Moreover, this could cause inherent limitations of GNNs, such as over-smoothing and over-squashing
+problems [6, 15, 16]. Therefore, it is necessary to learn degree-unbiased representations with a single framework.
+In this study, we propose a novel framework for learning degree-unbiased representations via learnable augmentations
+and graph transformers by extracting within-community structures. The main challenge of designing learnable graph
+augmentations is how to provide valuable connection opportunities for nodes with the goal of obtaining node degree
+unbiases. Thus, given a target node, it is important to capture ranked context nodes in order to generate the edges via
+learnable graph augmentations. We then investigate the connections between nodes within the same community as they
+could share similar features. Intuitively, we rank the context nodes within the community according to a degree score
+w.r.t (i) they are in the same community and within a k-hop distance, and (ii) they have the same low degree together.
+The graph augmentation is end-to-end trainable through edge perturbation, making itself learn the informativeness
+and degree unbiases. To illustrate our augmentation strategy, consider three low-degree nodes 1, 2, and 3 in Figure
+1(a). The three nodes have similar low degrees and are connected to a dense topology within a community. Therefore,
+our learnable augmentation module will construct edges between them with a high probability, which provides more
+within-community features. The augmentation module can also remove edges between high-degree nodes via edge
+perturbation, i.e., the edge connecting node 6 and 7, shown in Figure 1(a).
+Note that the augmentation module could generate many edges connecting distant nodes even in the same community,
+which makes the model agnostic to learn the high-order proximity between pairs of nodes. In addition, within a
+community, nodes with similar degrees (roles) tend to share similar features that also need to be discovered in graph
+learning. Thus, we propose an improved self-attention, an extension of transformer attention to capture the high-order
+proximity and the node roles information between nodes. It is worth noting that we directly encode the high-order
+proximity into full dot product attention, which could enable CGT to discover the proximity information along with
+messages from neighborhoods to target nodes. Furthermore, the augmentation module could collapse into insignificant
+connections and thus could fail to generate appropriate graph data. For example, the augmentation module could
+learn to generate a fully connected graph or remove too many edges that retain no original graph structure. Such
+graph augmentations are not informative as they lose all the structural information from the original graph. Therefore,
+we propose a self-supervised learning (SSL) task to preserve the k-step transition probability between node pairs
+
+
+                                                                                 2
+and regularize the graph augmentations. To the extent of our knowledge, CGT is the first graph transformer model
+addressing degree fairness.
+In summary, our contributions are as follows:
+
+       • We propose the utilization of within-community structures in learnable augmentations to allow low-degree
+         nodes to be sampled with high probabilities via edge perturbation.
+       • We propose a novel graph transformer with improved self-attention that takes the augmented graph as input
+         and encodes the within-community proximity into dot product self-attention and the roles of nodes.
+       • We propose a self-supervised learning task to preserve graph connectivity and regularize the augmented graph
+         data to generate the representations.
+
+2     Related work
+Currently, several studies have proposed augmentation-based methods to achieve fair representations of low-degree
+nodes [17, 3]. These methods commonly construct multiple views via augmentations of the input graph and then
+optimize the representations through different contrastive learning strategies. For example, GRACE [7] first constructs
+two augmented views of a graph by randomly dropping edges or masking their features. Then, it aims to make positive
+representations to be close while pushing negative pairs far apart. GCA [18] enhances GRACE by proposing adaptive
+augmentation techniques that focus on the graph structure and node features. These methods use the probability as the
+weight of negative samples and treat all neighbor nodes as negative samples, which can not fully capture the global
+graph structure. RGRL [4] aims to preserve the global relationship between nodes with a heuristic augmentation for low-
+degree nodes. GRADE [3] explores the context nodes of low-degree nodes within an ego network to obtain structural
+fairness. Despite the success of the methods, the existing augmentation models that adopt heuristic augmentation
+operations or uniform random sampling, which are non-differentiable and thus could prevent the model from learning
+useful information. Furthermore, the heuristic augmentations could fail to generate the appropriate graph data, such
+as dropping most of the edges or adding too many redundant edges. In contrast, we use learnable augmentations to
+generate augmented graphs with degree-unbiased learning while preserving the most original graph structure.
+Some recent approaches aim to expand the range and the sub-structures of neighborhoods of nodes to find more useful
+information. For example, MixHop [19] updates representations based on the neighbors within k-hop distance and
+then adjusts the aggregation mechanism. The SAT model [11] learns representations by extracting multiple subgraphs
+at one time by replicating the nodes for every subgraph. Several common graph transformers, i.e., GT [2] and SAN
+[9], treat graphs as fully connected graphs and enrich the high-order information for all nodes as adjacent connections.
+Extending the k-hop neighborhood could mainly benefit low-degree nodes to obtain further information, as real-world
+graphs are dominated by low-degree nodes. To the extent of our knowledge, there are no graph transformers targeting
+node degree unbiases.
+
+3     Methodology
+In this Section, we first introduce our strategy to build learnable graph augmentation (Sec. 3.1). We then explain the
+CGT architecture in detail (Sec. 3.2). Finally, we introduce the SSL task for graph structure preservation (Sec. 3.3).
+Figure 2 shows the overall architecture of our framework.
+
+3.1   Learnable Graph Augmentation
+
+CGT uses learnable augmentations to generate new graph data with degree unbiases by extracting community infor-
+mation while preserving the most original graph structure. Given an input graph G = (V, A) where V denotes the
+set of nodes and A is the adjacency matrix in G. We then add to A a matrix D, which contains ranked context nodes
+with a low-degree bias to generate a new matrix Ã. Thus, the matrix Ã could contain useful information for providing
+opportunities for making connections between low-degree nodes within the same community. We then generate a new
+graph G′ = (V, A′ ) via edge transformation, as follows:
+
+                                        Ã = ξA + ζD ,          A′ = TA (Ã),                                       (1)
+where ξ and ζ are hyper-parameters to control the skewness of sampling. TA is an edge perturbation transformation,
+which maps Ã to the new adjacency matrix A′ . We now explain the strategies to construct the context nodes, ranked
+matrix D, and edge transformation.
+
+
+                                                           3
+                                      Connectivity Reconstruction Loss
+            Low-degree nodes                                                          Embeddings
+            High-degree nodes
+                                                                                                                Norm & FFN
+        Node features
+        High-order proximity
+        Degree-based distance
+                                                                                                  Graph
+                                                                                               Transformer
+                            4   5
+     Degree-biased
+         score              2   3
+                                                                                                               Softmax
+                                                      Learnable Augmentation Module
+
+                                    0.1 0.9 0.8 0.2 0.2                                          2        4
+        2            4
+                                    0.9 0.2 0.4 0.7 0.7                                                        Product
+                                                          Sampling
+ 1                                  0.8 0.4 0.2 0.1 0.1                                    1     x   x
+                     5              0.2 0.7 0.1 0.1 0.9
+                                                                                                          5
+        3                           0.2 0.7 0.1 0.9 0.1
+                                                                                                 3
+
+
+
+
+                                      Augmentation Loss
+
+
+
+Figure 2: An overview of our framework. CGT comprises two main blocks, including learnable augmentation and
+graph transformer.
+
+
+3.1.1        Capturing context nodes
+As mentioned before, we sample the nodes within the same community as they share similar features. Given the
+graph G, we first cluster the nodes in the graph into M partitions G = {G1 , G2 , . . . , GM } by applying the K-means
+clustering algorithm on the original graph to obtain M clusters. Intuitively, the context nodes are nodes that (i) can
+be reachable within k-step transition and (ii) are the same cluster as the target node. We expect the context nodes to
+provide more valuable messages to the target nodes.
+Formally, we define the set of context nodes of node vi as:
+
+                                                                     n                          o
+                                                                                (k)
+                                                            N (vi ) = vj ∈ V : Aij > 0 , Gi = Gj ,                           (2)
+               (k)                                                                                       (k)
+where Aij denotes the k-step transition probability from vi to vj . Aij > 0 refers to the reachability between two
+nodes vi and vj . Gi and Gj are clusters of nodes vi and vj , respectively. By doing so, the connection between the
+target node vi and its context nodes will likely be sampled from our learnable augmentation. To illustrate our sampling
+strategy, consider a target node vi and three clusters, as shown in Figure 3. The context nodes of vi are vj , vk , and vm
+as they are in the same community, and the distance between them is k-hop steps.
+
+3.1.2        Ranking context nodes
+The context nodes may contain a large set of high-degree nodes that could not be beneficial to making connections for
+low-degree nodes. Thus, given a target node vi , we now rank the set of context nodes vj with the goal of obtaining
+sampling for low-degree nodes with high probabilities. Note that within a community, nodes with similar roles tend to
+share similar features, which could be beneficial to generating connections. Therefore, the key idea is to apply a score
+from an inverse degree of nodes. Precisely, we define the degree-biased score as:
+                                                                                   1
+                                                                           Dij = p        ,                                  (3)
+                                                                                  di · dj
+
+where di and dj denote the degree of nodes vi and vj , respectively. Dij refers to the row i-th and column j-th of the
+degree-bias matrix D. By doing so, the connection between two nodes will be sampled with a high probability if they
+have a low degree together.
+In a nutshell, given a target node vi , we sample a set of context nodes N (vi ) from Equation 2, and then compute the
+degree-biased score towards low-degree nodes from Equation 3. We then add the original adjacency matrix (A) to
+the degree bias matrix (D) to generate the Ã matrix. Afterward, the transformations for edges are performed through
+sampling from the Bernoulli distribution as described below.
+
+
+                                                                                       4
+Figure 3: An overview of obtaining context nodes of the target node vi . Given a target node vi , we sample context
+nodes within the same community and then rank connections between vi and the context nodes as the probability for
+sampling based on Equation 3.
+
+
+3.1.3    Edge perturbation
+We now transform Ã to a new adjacency matrix A′ through sampling from Bernoulli distribution parameterized with
+the probability in Ã, as follows:
+                                    ′
+                                                   
+                                   Aij = Bernoulli Ãij ,      i, j = 1, . . . , N.                          (4)
+
+Note that the Bernoulli sampling function for the matrix Ã is not differentiable. Thus, to make the graph augmentation
+process differentiable in a fully end-to-end manner, we utilize the commonly-used scheme to approximate the Bernoulli
+sampling in Equation 4. Precisely, we approximate the Bernoulli sampling process by Gumbel-Softmax as a re-
+parameterization trick to relax the discrete distribution, following the work [20, 21].
+
+3.2     Community-aware Graph Transformer
+
+Given a graph G =< V, E >, the node feature xi ∈ Rd0 ×1 of node vi is projected via a linear transformation to
+d-dimensional hidden vector h0i , as h0i = W0 xi + b0 , where W0 ∈ Rd×d0 and b0 ∈ Rd are the learnable parameters of
+the linear transformation, d0 is the original feature of vi .
+
+3.2.1    Community-aware Self-Attention
+As mentioned above, the graph attention is agnostic to the high-order proximity and the roles of nodes within the
+community. Thus, we aim to design an improved self-attention, an extension of transformer attention, which could
+learn the high-order proximity and node degree similarity between pairs of nodes. We then inject the QK vectors with
+high-order proximity between node pairs by concatenating the proximity s and node feature h. Accordingly, we use
+two separately learnable matrices for each weight matrix for learning node features and high-order proximity. Precisely,
+we first project the high-order proximity vector to d-dimensional vectors, then add to the attention vectors of nodes.
+The attention score at layer l-th of head k-th can be calculated, as follows:
+
+                                                                              
+                                   k,l      Qk,l hli , slij      K k,l hlj , slij
+                                  αij  =                    √                         + ϕf (i,j) ,                     (5)
+                                                               dk
+                                                      h      k,l            k,l
+                                                                                    i
+                                  Qk,l hli , slij = WnQ hli + WsQ slij ,
+                                                 
+                                                                                                                       (6)
+                                                    h        k,l             k,l
+                                                                                      i
+                                  K k,l hlj , slij = WnK hlj + WsK slij ,
+                                       
+                                                                                                                       (7)
+            k,l    k,l      k,l     k,l    k,l
+where WnQ , WsQ , WnK , WsK , Φ ∈ Rdk ×d , k = 1 to H refers to the number of attention heads, hi and hj
+are the features of node vi and vj , respectively. slij denotes the high-order proximity between two nodes vi and vj , and
+ϕf (i,j) is a linearly transformed distance based on the role of nodes.
+
+
+                                                                 5
+Our objective is to discover underlying within-community structures in graph learning. To address this situation, we
+propose a novel approach for calculating the high-order proximity between vi and vj in a multi-scaled manner as:
+
+                                                                               
+                                                    (1)     (2)             (k)
+                                         sij = f simij , simij , . . . , simij ,                                         (8)
+
+                                              (k)      N (k) (vi ) ∩ N (k) (vj )
+                                         simij =                                 ,                                       (9)
+                                                       N (k) (vi ) ∪ N (k) (vj )
+where N (k) (vi ) refers to the set of neighbours of vi up to k-step transition, and f (·) denotes a linear transformation to
+d-dimensional hidden vectors. To make CGT more sensitive to the roles of nodes with a low-degree bias, we introduce
+the function ϕf (i,j) , which measures the distance between vi and vj based on their degree, as ϕf (i,j) = f (Dij ). By
+utilizing ϕf (i,j) , each target node vi in the transformer layers can adaptively attend to other nodes according to the node
+roles.
+
+3.2.2    Graph Transformer Layers
+We concatenate the outputs of the self-attention module into vector representations followed by a linear projection. The
+node features hli of vi at layer l is then updated as:
+                                                                             
+                                                       H
+                                                           X        k,l k,l l 
+                                          ĥl+1
+                                            i   = Ohl            α̃ij V hj ,                                        (10)
+                                                       k=1     vj ∈N (vi )
+        k,l              k,l
+where α̃ij  = softmaxj (αij  ), Qk,l , K k,l ,V k,l ∈ Rdk ×d , Ohl ∈ Rd×d , and ∥ refers to concatenation. We then pass the
+outputs to feed-forward networks (FFN) by adding residual connections and layer normalization as:
+
+                                                                                  
+                                   ĥl+1
+                                     i   = LN hli + ĥl+1
+                                                      i     , hl+1
+                                                               i   = W2l σ W1l ĥl+1
+                                                                                 i                                      (11)
+where W1l ∈ R2d×d and W2l ∈ Rd×2d are learnable parameters, and LN is layer normalization.
+
+3.3     Self-Supervised Learning Tasks
+
+We provide an SSL task that could capture the graph connectivity and initial node features as well as regularize learnable
+augmentations. To preserve graph connectivity and original node features, we aim to maximize the transition probability
+of all paths connecting pairs of nodes, following the work [10, 22], as:
+
+                                             X                         2           1
+                                   L1 = β1           M (p) − Z ∗           + β2        X − X̂ ,                         (12)
+                                               p
+                                                                       F          |V |        2
+
+where M (p) is the log scale matrix at p-th step transition matrix, Z ∗ is the cosine similarity matrix calculated
+from representations, X refers to original feature matrix, β1 and β2 are hyper-parameters. X̂ presents the learned
+representations after adding a linear layer to the representation Z. Note that the augmentation module could collapse
+into insignificant connections and thus could fail to generate the appropriate graph data. Thus, we use a binary cross
+entropy (BCE) loss to penalize the graph augmentations, as follows:
+
+                                              N h
+                                              P                ′                           ′
+                                                                                                i
+                                    L2 = −           Aij log(Aij ) + (1 − Aij ) log(1 − Aij )                           (13)
+                                             i,j=1
+
+
+The overall loss for the SSL task is then combined via a linear transformation, as follows:
+
+
+                                                      L = α1 L1 + α2 L2 ,                                               (14)
+where α1 and α2 are hyper-parameters.
+Afterward, the learned representations are used to address downstream tasks. In this study, we present two downstream
+tasks, including node classification and node clustering tasks. For the node clustering task, we used modularity as
+the loss function, following the work [23]. For the node classification task, we extracted the representations from one
+transformer layer to fully connected (FC) layers to obtain the classification output.
+
+
+                                                                   6
+4     Evaluation
+
+In this Section, we first evaluate the performance of our proposed model against other state-of-the-art baselines on
+benchmark datasets. We then examined the effectiveness of CGT and conducted ablation studies and sensitivity analysis.
+
+4.1     Experimental Settings
+
+4.1.1    Datasets
+We evaluate the performance of our proposed model by using various benchmark datasets on different downstream
+tasks. Specifically, we used six publicly available datasets, which are grouped into three different domains, including
+citation network (Cora, Citeseer, and Pubmed datasets [24]), Co-purchase network networks (Amazon Computers and
+Photo datasets [25]), and reference network (WikiCS [26]).
+
+4.1.2    Baselines
+We compare our proposed model to recent state-of-the-art GRL methods, including GNN variants, augmentation-based
+models, and graph transformers. The GNN variants are GCN [27], GIN [28], GAT [29],and GraphSAGE [30], We also
+compare our model with augmentation-based methods, such as RGRL [4], GRACE [7], GRADE [3], and GCA [18].
+Furthermore, we compare CGT against recent graph transformers, such as GT [2], SAN [9], SAT [11], and GPS [31].
+
+4.1.3    Implementation Details
+We conducted each experiment ten times by randomly sampling training, validation, and testing sets of size 60%, 20%,
+and 20%, respectively. The results written in the tables were measured with means and standard deviation on the testing
+set over the ten cases. The hyper-parameters were tuned on the validation sets for each task and dataset. For baselines,
+we follow the parameters obtained from the best variants.
+
+4.2     Performance Analysis
+
+4.2.1    Performance on Node Classification
+Table 1 shows the performance of CGT compared to various baselines on the node classification task. We have the
+following observations: (i) Our proposed model performed well on all graph datasets compared with graph transformers
+that overlook the relations between low-degree nodes, i.e., GT, SAN, SAT, and GPS methods. Since less information
+is delivered to low-degree nodes, our proposed model could be able to provide learning opportunities to low-degree
+nodes within communities, leading to the highest performance. This demonstrates the benefit of our automated
+augmentation module and self-attention bias that could capture useful information between low-degree nodes. (ii)
+CGT also outperformed augmentation-based contrastive learning methods, i.e., RGRL, GRACE, GRADE, and GCA
+models. This is because our automated augmentation module is end-to-end trainable, leading to more effective learning
+representations on graphs. In addition, by injecting within-community and node role similarity into self-attention, CGT
+could also learn the structure similarity between nodes.
+
+4.2.2    Performance on Node Clustering
+Despite the benefits of data augmentation, this can hinder the model from capturing the graph structure. Therefore, we
+conducted further experiments on node clustering tasks to evaluate the performance of our model in understanding the
+graph structures. For baseline models, we adopt the learned representations from node classification tasks and then use
+the K-mean clustering algorithm to partition nodes into clusters. Tab 2 shows the performance on node clustering tasks
+of various methods. We observed that: (i) CGT could learn the graph structure well compared to baselines. Although
+most GNN variants perform well on node classification tasks, they failed to capture the node partition and connectivity
+information. It indicates that CGT relaxes the strict constraints of multiple views of the input graph, which can prevent
+the augmentation module from generating graphs that deviate too much from the input graph while capturing useful
+information from low-degree nodes. (ii) Our model outperforms the augmentation-based methods, i.e., RGRL, GRACE,
+and GCA, as CGT could control the useful information from edge perturbations and the power of the self-attention
+bias. This is because the augmentation module is end-to-en trainable, leading to the power to discover fairness-aware
+augmentations on degree-related biases, while current methods only use a heuristic augmentation. Furthermore, the
+self-attention bias could enable our model to learn the within-community similarity between node pairs within the
+community.
+
+
+                                                           7
+                             Cora            Citeseer         Pubmed       WikiCS        Computers             Photo
+         GCN           85.89±1.06           73.20±1.08     85.74±0.61    79.56±0.92      89.47±0.46          93.38±0.50
+         Sage          86.05±1.87           74.58±1.33     86.48±0.38    82.90±0.80      89.47±0.45          92.28±0.58
+         GIN           77.25±3.35           64.09±1.95     85.96±0.57    76.53±0.82      66.59±0.16          88.92±1.36
+         GAT           84.21±1.47           73.43±1.21     82.43±0.47    77.55±0.71      90.06±0.76          93.34±0.73
+         RGRL          84.27±0.87           71.77±0.89     82.50±0.17    79.22±0.49      84.83±0.43          92.14±0.24
+         GRACE         83.09±0.86           69.28±0.29     85.14±0.24    30.52±0.54      88.12±0.19          92.21±0.10
+         GCA           83.43±0.34           68.20±0.26     85.65±1.02    32.34±0.07      74.87±0.11          91.28±0.58
+         GRADE         85.67±0.92           74.21±0.88     83.90±1.27    82.91±0.83      87.17±0.64          93.49±0.60
+         GT            84.32±1.01           72.51±1.65     87.77±0.60    84.05±0.33      90.53±2.53          95.18±0.66
+         SAN           83.65±1.32           72.12±1.89     81.04±0.99    81.04±0.81      90.30±1.06          95.08±0.48
+         SAT           79.13±0.73           66.52±0.60     87.92±0.22    80.04±0.76      87.78±0.59          92.74±0.51
+         GPS           75.64±0.94           65.71±0.59        OOM        55.76±1.23      50.26±5.95          64.46±4.30
+         Ours       87.10±1.53 76.59±0.98 86.86±0.12 84.61±0.53 91.45±0.58 95.73±0.84
+Table 1: The performance on node classification task (accuracy). The highest three are highlighted by first, second, and
+third
+
+
+                     Cora              Citeseer            Pubmed         Computers             Photo              WikiCS
+                C↓          Q↑       C↓        Q↑        C↓      Q↑       C↓      Q↑       C↓           Q↑       C↓        Q↑
+             12.90      70.53       11.84     67.54      9.54   54.59    52.13   47.58    21.57    69.82        41.53     54.92
+ GCN
+             ±0.26      ±0.28       ±0.49     ±0.45     ±0.23   ±0.12    ±0.81   ±1.66    ±3.34    ±4.60        ±1.01     ±1.68
+             16.50      66.69       20.86     59.21     10.71   53.87    23.29   74.29    16.30    79.77        30.79     67.22
+ Sage
+             ±0.18      ±0.26       ±0.44     ±0.46     ±0.44   ±0.34    ±3.99   ±3.65    ±0.43    ±2.37        ±0.61     ±1.05
+             22.73      59.52       23.95     55.35     13.25   49.01    39.01   59.57    32.69    62.53        37.87     60.48
+  GIN
+             ±1.50      ±1.93       ±3.29     ±3.38     ±0.84   ±0.95    ±1.42   ±1.19    ±5.81    ±6.69        ±3.92     ±3.90
+             16.05      67.29       21.94     58.17     10.74   53.21    20.68   77.41    15.33    81.15        31.78     66.38
+ GAT
+             ±0.45      ±0.35       ±0.83     ±0.69     ±0.45   ±0.76    ±2.40   ±2.08    ±0.42    ±0.17        ±1.39     ±2.06
+             12.73      63.92        5.66     68.41     ±1.68    56.36   12.06   87.76    17.57    76.80        22.62     77.47
+ RGRL
+             ±1.44      ±4.96       ±0.37     ±3.20     ±1.68   ±15.39   ±1.28   ±1.77    ±3.62    ±5.38        ±1.42     ±2.41
+             22.22      47.80        5.00     71.26     14.13    48.45   13.56   85.09     9.32    85.37        51.97     48.10
+ GRACE
+             ±0.06      ±0.07       ±0.04     ±0.04     ±0.04   ±0.03    ±0.50   ±0.56    ±0.00    ±0.00        ±0.33     ±1.15
+             11.76      61.26       13.52     57.53     20.80   42.23    13.69   86.21    21.73    72.20        38.95     60.59
+ GCA
+             ±2.05      ±2.64       ±1.72     ±1.50     ±0.07   ±0.09    ±1.47   ±2.08    ±5.63    ±7.93        ±6.05     ±5.55
+             17.77      65.07       23.50     56.69     19.16   44.90    26.53   72.77    17.11    78.47        34.19     64.62
+  GT
+             ±0.81      ±0.83       ±0.91     ±1.01     ±0.99   ±0.85    ±6.77   ±7.68    ±0.27    ±0.17        ±3.57     ±4.18
+             22.88      60.81       24.48     56.01     14.89   49.72    30.61   67.36    18.05    73.86        30.22     67.95
+  SAN
+             ±2.63      ±2.45       ±1.95     ±1.77     ±1.20   ±1.08    ±6.09   ±6.00    ±1.71    ±2.63        ±1.88     ±2.79
+             28.25      54.09       34.82     45.31     21.57   43.04    20.64   79.07    20.67    71.85        32.71     66.96
+  SAT
+             ±2.47      ±3.00       ±2.94     ±6.08     ±1.97   ±2.21    ±5.15   ±5.95    ±7.44    ±8.18        ±3.84     ±4.01
+             31.69      45.77       44.06     33.61     OOM     OOM      18.82   81.28    19.40    75.11        29.69     68.56
+  GPS
+             ±2.46      ±2.60       ±4.62     ±2.79     OOM     OOM      ±2.74   ±2.93    ±2.67    ±3.87        ±1.56     ±2.90
+              9.84      69.28        5.40     68.19     7.66    89.51    10.13   88.07    9.71     85.39        21.68     76.71
+  Ours
+             ±0.76      ±0.32       ±1.21     ±0.39     ±1.52   ±4.19    ±1.30   ±1.32    ±0.44    ±2.58        ±0.82     ±1.31
+    Table 2: The performance on node clustering task. The top three are emphasized by first, second, and third.
+
+
+
+4.2.3    Fairness Analysis
+
+To validate the effectiveness of CGT on learning degree-related fairness, we further investigate the misclassification rate
+w.r.t node degrees, shown in Figure 4. Furthermore, to deeply analyze the imbalance against baselines, we conducted
+the miss-classification rate on different ranges of low-degree node groups, as shown in Table 3. We observe that: (i)
+When the node degree is very small, i.e., d ≤ 2 and d ≤ 4, the improvement of our model is more significant compared
+to the baselines. When the degree becomes larger, the improvement becomes smaller. This is because when low-degree
+nodes have few neighbors, our augmentation module could likely generate more edges connecting low-degree nodes,
+
+
+                                                                 8
+                                                                  Cora                                 Computers                              Photo
+                                                                                         60                                     50
+                                      25                                        GT                                  GT                                    GT
+
+         Misclassification rate (%)
+                                                                                CGT                                 CGT         40                        CGT
+                                      20
+                                                                                         40
+                                      15                                                                                        30
+                                      10                                                 20                                     20
+                                       5                                                                                        10
+                                       0                                                  0                                      0
+                                                                  5              10           0       5     10    15                 0    5     10    15
+                                                               Node degree                            Node degree                         Node degree
+Figure 4: Miss-classification rate on nodes w.r.t degrees between CGT and GT on Cora, Computers, and Photo datasets.
+
+
+                                                                         Cora                          Computers           97            Photo
+                                                          89
+                                           Accuracy (%)
+
+
+
+
+                                                          88                               90                              96
+                                                          87                               89                              95
+                                                          86                               88                              94
+                                                          85                               87                              93
+                                                          84                               86                              92
+                                                               1 2 3 4 5 6 7 8                    1 2 3 4 5 6 7 8                1 2 3 4 5 6 7 8
+                                                                k-step transition (k)              k-step transition (k)          k-step transition (k)
+                                                                                      (a) On the range of k-step transition.
+                                                                       Cora                            Computers                         Photo
+                                                          87                               91                              96
+                                           Accuracy (%)
+
+
+
+
+                                                          86                               90
+                                                          85                               89                              95
+                                                          84                               88
+                                                          83                               87                              94
+                                                               0.1 0.3 0.5 0.7 0.9                0.1 0.3 0.5 0.7 0.9           0.1 0.3 0.5 0.7 0.9
+                                                                  Degree bias ( )                    Degree bias ( )               Degree bias ( )
+                                                                                              (b) On the degree bias.
+      Figure 5: The performance in terms of the sampling range of k-step transition (a) and the degree bias (b).
+
+
+
+thus significantly improving the performance on low-degree nodes. In contrast, when the node degree goes higher, the
+models are already trained with adequate message information from neighborhoods, which makes the improvements
+minor. (ii) CGT achieves the fairness of the miss-classification rate on different degree groups compared to baselines,
+especially on the Cora dataset. The deviation of each node degree group stands relatively equal for nodes in different
+degree groups over the total error rate. (iii) We observe that CGT significantly outperforms contrastive learning-based
+methods on low-degree nodes, i.e., RGRL, GRACE, and GCA. It indicates the superiority of our automated graph
+augmentation on the context nodes over the heuristic augmentations.
+
+
+4.3   Ablation Studies
+
+To investigate the contribution of different components of CGT, we conducted further experiments on the Cora,
+Computers, and Photo datasets, shown in Table 4. We observe that: (i) The use of pre-training leads to a significant
+improvement, especially in the Computer dataset. It indicates that the augmentation module could not only benefit
+the low-degree nodes but also retain the original graph structures. (ii) Another important contributing factor is the
+augmentation module on graphs, which provides connection opportunities for low-degree nodes. It means the automated
+augmentation module delivers sufficient learning opportunities for low-degree nodes while reducing the bias of the
+transformers towards high-degree nodes. In addition, attention modules contribute to a slight increase in the overall
+performance.
+
+
+                                                                                                         9
+                         d≤2               d≤4               d≤6               d≤8               d ≤ 10
+          Method                                                                                               All↓
+                    Error↓     Bias↓   Error↓   Bias↓    Error↓   Bias↓    Error↓   Bias↓    Error↓   Bias↓
+                                                             Cora
+          GIN       21.33      +4.61   18.69    +1.97    17.01    +0.29    17.12     +0.4    17.21    +0.49    16.72
+          GAT       19.55      +6.4    15.19    +2.04    13.56    +0.41    13.71    +0.56    13.58    +0.43    13.51
+          RGRL      17.88      +2.95   15.82    +0.89    15.24    +0.31    15.15    +0.22    15.12    +0.19    14.92
+          GRACE     16.01      +1.59   15.02    +0.61     14.7    +0.28     14.6    +0.19    14.59    +0.17    14.41
+          GCA       19.19      +3.43   16.52    +0.76    15.81    +0.05    16.85    +0.82    15.85    +0.09    15.76
+          GRADE     17.94      +4.18    16.1    +2.34    15.42    +1.66    14.36    +0.60    13.88    +0.12    13.76
+          GT        17.77      +2.01   16.41    +0.64    16.25    +0.48     16.7    +0.93    16.28    +0.51    15.77
+          SAN       16.09      +0.91   15.60    +0.41    14.95     -0.24   15.09    -0.11    15.37    +0.18    15.19
+          SAT       26.34      +3.06   25.12    +1.84    24.38     +1.1    23.78     +0.5    23.71    +0.43    23.28
+          Ours      12.51      -0.81   11.99    -1.32    13.65    +0.34    13.05    -0.16    13.47    +0.16    13.31
+                                                          Computers
+          GIN       35.55     +22.54   25.96    +12.95   20.83    +7.82    18.06    +5.05    16.91    +3.90    13.01
+          GAT       36.93     +24.55   27.59    +15.21   21.44    +9.06    20.61    +8.23    18.21    +5.83    12.38
+          RGRL      31.35     +16.71   27.17    +12.53    23.4    +8.76    21.65    +7.01     20.5    +5.86    14.63
+          GRACE     33.37     +19.93   25.91    +12.47   21.67    +8.22    19.32    +5.87    18.07    +4.63    13.44
+          GCA       37.83     +17.9    32.68    +12.75   28.77    +8.84    26.81    +6.88    25.95    +6.02    19.93
+          GRADE     33.06     +20.61   28.83    +16.38   25.88 +13.43      23.46    +11.01   21.54    +9.09    12.45
+          GT        37.02     +25.16   28.69    +16.83    24.5    +12.64   21.09    +9.23    19.92    +8.06    11.86
+          SAN       34.02     +24.61   23.68    +14.27   17.93    +8.52    15.73    +6.32    14.81    +5.39     9.41
+          SAT       32.42     +19.16   27.43    +14.17   23.03    +9.77    20.95    +7.69     18.4    +5.14    13.26
+          Ours      25.54     +16.81   19.58    +10.85   15.68    +6.95    13.91    +5.18    13.19    +4.46     8.73
+                                                            Photo
+          GIN       38.61     +25.88   29.44    +16.71   30.29 +17.56      25.34    +12.61   24.67    +11.94   12.73
+          GAT       36.46     +26.8    28.72    +19.06   25.36    +15.7    20.16    +10.5    17.91    +8.25     9.66
+          RGRL      21.91     +14.2    17.05    +9.35    15.16    +7.45    13.42    +5.72    12.82    +5.11    7.70
+          GRACE      21.5     +14.28   17.05    +9.84    14.86    +7.64    12.97    +5.76    12.22     +5.0    7.21
+          GCA        21.7     +12.92   17.47    +8.69    16.27    +7.49    14.44    +5.66    14.15    +5.37    8.77
+          GRADE     18.06     +10.41   17.85    +10.21   15.46    +7.82    15.05    +7.41    14.01    +6.37    7.64
+          GT        14.78     +9.95    14.63    +9.81    12.98    +8.15    10.67    +5.84     10.5    +5.67    4.83
+          SAN       13.25     +8.58    11.17    +6.51    10.01    +5.33     9.88    +5.21     9.37    +4.71     4.67
+          SAT       22.22     +9.53    16.04    +3.35    14.55    +1.86    13.46    +0.77    12.39     -0.3    12.69
+          Ours      11.83     +7.62     9.38    +5.17     9.59    +5.38     7.67    +3.46     7.82    +3.61     4.21
+Table 3: Miss-classification rate (%) according to the range of node degree (d) on Cora, Computers, and Photo datasets
+in comparison between our proposed model and baselines. For each degree group d, we measure the misclassification
+rate (Error) and the Bias compared to the overall error (All). The top three are emphasized by first, second, and third.
+
+
+                             Pre. Aug. Att.         Cora         Computers         Photo
+                                    -      -     83.91±1.29 86.15±2.12 93.79±1.77
+                                    -      ✓     84.29±1.45 86.26±1.56 94.54±1.87
+                            -
+                                    ✓      -     84.06±1.17 85.66±2.87 94.67±1.52
+                                    ✓      ✓     85.36±1.21 87.57±1.79 94.44±0.87
+                                    -      -     84.81±1.78 90.07±0.82 94.23±1.45
+                                    -      ✓     85.54±1.07 89.01±0.84 95.08±1.08
+                            ✓
+                                    ✓      -     84.95±1.19 90.38±0.41 95.46±0.23
+                                    ✓      ✓     87.10±1.53 91.45±0.58 95.73±0.84
+Table 4: The effectiveness of different modules, including pre-training (Pre.), augmentation (Aug.), and self-attention
+(Att.). The top three are emphasized by first, second, and third.
+
+
+
+4.4   Sensitivity Analysis
+
+In this section, we evaluate how the different options of the k-step transition and degree bias d for the learned
+representations can affect the overall model performance, shown in Figure 5. We observe that: (i) The model
+performance increased significantly over the setting k = 2 and k = 3. It indicates that the learned representations could
+learn not only through the adjacency connection but also can capture the global information from the neighborhood
+within communities. (ii) When k goes higher, the performance of the model reaches the maximum and then tends to
+decrease. It means that the augmentation module could generate many unuseful edges, making it challenging for the
+model to learn the representations. (iii) On the impacts of degree bias parameter ζ, our model achieves the highest
+
+
+                                                             10
+                               Model                            Complexity
+                               GT                    OP E (mE)+ Oenc (N 2 )
+                               SAN           OP E1 (mE) + Oenc (N 2 ) + OP E2 (m2 N )
+                               SAT          OP E (mE) + Osubgraph (N k ) + Oenc (N 2 )
+                               CGT (ours)     Opre (N E) + Oenc (N 2 ) + Obias (N 2 )
+                                    Table 5: Comparison on computational cost.
+
+
+
+performance, i.e., ζ = 0.3 on the Cora and Photo datasets. This is because the automated augmentation module could
+sample more low-degree nodes and make the adjacent connections between them, providing an opportunity for learning
+relations while reducing the connection between high-degree nodes.
+
+4.5   Complexity Analysis
+
+We compute three matrices, d, s, and ϕ, only at the first time. The computational cost of d and ϕ for the whole graph is
+O(N 2 ). To construct s, we search on k-step matrices with the cost of O(N 2 ). For model steps, the computational cost
+for each layer in dot-product attention is O(N 2 ), similar to other graph transformers. SAT calculates representations in
+the time complexity of O(N k ) to extract k-subgraphs for each representation. In summary, CGT is more efficient than
+the SAN and SAT and only slightly increases complexity compared to the GT, as shown in Table 5.
+
+5     Conclusion
+In this paper, we mitigate degree biases in the message-passing mechanism via learnable augmentation and graph
+transformers by extracting community structures. Here, we propose learnable augmentations that could generate
+edges connecting low-degree nodes within communities with high probabilities. In addition, we propose improved
+self-attention, encoding the within-community and node role similarity between node pairs. We also present in-depth
+discussions on how CGT achieves the best performance compared to recent methods. Extensive experiments on
+real-world datasets demonstrate the effectiveness of CGT on downstream tasks as well as reducing the degree biases
+in the message-passing mechanism. As mentioned above, CGT has a higher memory cost than other contrastive
+learning-based methods due to the quadratic complexity of full self-attention bias. We plan to reduce the computational
+cost of the self-attention computation and extend CGT to the case that the community is sparse and has a limited number
+of nodes.
+
+Acknowledgments
+This work was supported in part by the National Research Foundation of Korea (NRF) grant funded by the Korea
+government (MSIT) (No. 2022R1F1A1065516 and No. 2022K1A3A1A79089461) (O.-J.L.) and in part by the Research
+Fund, 2022 of The Catholic University of Korea (M-2023-B0002-00088) (O.-J.L.).
+
+References
+ [1] Van Thuy Hoang, Hyeon-Ju Jeon, Eun-Soon You, Yoewon Yoon, Sungyeop Jung, and O-Joun Lee. Graph
+     representation learning and its applications: A survey. Sensors, 23(8), 2023.
+ [2] Vijay Prakash Dwivedi and Xavier Bresson. A generalization of transformer networks to graphs. In Proceedings
+     of the AAAI Workshop on Deep Learning on Graphs (AAAI 2021), 8–9 Feb 2021.
+ [3] Ruijia Wang, Xiao Wang, Chuan Shi, and Le Song. Uncovering the structural fairness in graph contrastive learning.
+     In Proceedings of the 35th Annual Conference on Neural Information Processing Systems (NeurIPS 2022), New
+     Orleans, Louisiana, 28th Nov- 9th Dec 2022.
+ [4] Namkyeong Lee, Dongmin Hyun, Junseok Lee, and Chanyoung Park. Relational self-supervised learning on
+     graphs. In In Proceedings of the 31st ACM International Conference on Information & Knowledge Management
+     (CKIM 2022), Atlanta, GA, USA, 17-21 October, 2022, pages 1054–1063. ACM, 2022.
+ [5] Xianfeng Tang, Huaxiu Yao, Yiwei Sun, Yiqi Wang, Jiliang Tang, Charu Aggarwal, Prasenjit Mitra, and Suhang
+     Wang. Investigating and mitigating degree-related biases in graph convoltuional networks. In The 29th ACM
+
+
+                                                           11
+     International Conference on Information and Knowledge Management (CIKM 2020), pages 1435–1444. ACM,
+     Oct 2020.
+ [6] Rui Huang and Ping Li. Hub-hub connections matter: Improving edge dropout to relieve over-smoothing in graph
+     neural networks. Knowledge-Based Systems, 270:110556, 2023.
+ [7] Yanqiao Zhu, Yichen Xu, Feng Yu, Qiang Liu, Shu Wu, and Liang Wang. Deep Graph Contrastive Representation
+     Learning. In ICML Workshop on Graph Representation Learning and Beyond, 2020.
+ [8] Hongyi Ling, Zhimeng Jiang, Youzhi Luo, Shuiwang Ji, and Na Zou. Learning fair graph representations via
+     automated data augmentations. In The 11th International Conference on Learning Representations (ICLR 2023),
+     Kigali, Rwanda, 1-5 May, 2023 2023. OpenReview.net.
+ [9] Devin Kreuzer, Dominique Beaini, William L. Hamilton, Vincent Létourneau, and Prudencio Tossou. Rethinking
+     graph transformers with spectral attention. In Proceedings of the 34th Annual Conference on Neural Information
+     Processing Systems (NeurIPS 2021), pages 21618–21629, Virtual Event, Dec 2021.
+[10] Van Thuy Hoang and O-Joun Lee. Transitivity-preserving graph representation learning for bridging local
+     connectivity and role-based similarity. CoRR, abs/2308.09517, 2023.
+[11] Dexiong Chen, Leslie O’Bray, and Karsten M. Borgwardt. Structure-aware transformer for graph representation
+     learning. In Proceedings of the International Conference on Machine Learning (ICML 2022), pages 3469–3489,
+     Baltimore, Maryland, USA, 17–23 Jul 2022. PMLR.
+[12] O-Joun Lee and Jason J. Jung. Story embedding: Learning distributed representations of stories based on character
+     networks. Artificial Intelligence, 281:103235, 2020.
+[13] Hyeon-Ju Jeon, Min-Woo Choi, and O-Joun Lee. Day-ahead hourly solar irradiance forecasting based on
+     multi-attributed spatio-temporal graph convolutional network. Sensors, 22(19):7179, 2022.
+[14] O-Joun Lee, Hyeon-Ju Jeon, and Jason J. Jung. Learning multi-resolution representations of research patterns in
+     bibliographic networks. Journal of Informetrics, 15(1):101126, 2021.
+[15] Van Thuy Hoang, Thanh Sang Nguyen, Sangmyeong Lee, Jooho Lee, Luong Vuong Nguyen, and O-Joun Lee.
+     Companion animal disease diagnostics based on literal-aware medical knowledge graph representation learning.
+     IEEE Access, 11:114238–114249, 2023.
+[16] O-Joun Lee, Eun-Soon You, and Jin-Taek Kim. Plot structure decomposition in narrative multimedia by analyzing
+     personalities of fictional characters. Applied Sciences, 11(4):1645, 2021.
+[17] Yuning You, Tianlong Chen, Yongduo Sui, Ting Chen, Zhangyang Wang, and Yang Shen. Graph contrastive
+     learning with augmentations. In Proceedings of the 33rd Annual Conference on Neural Information Processing
+     Systems (NeurIPS 2020), virtual, 6-12 Dec, 2020 2020.
+[18] Yanqiao Zhu, Yichen Xu, Feng Yu, Qiang Liu, Shu Wu, and Liang Wang. Graph contrastive learning with adaptive
+     augmentation. In Proceedings of the 30th The Web Conference 2021 (WWW 2021), pages 2069–2080, Ljubljana,
+     Slovenia, 19-23 April, 2021 2021. ACM / IW3C2.
+[19] Sami Abu-El-Haija, Bryan Perozzi, Amol Kapoor, Nazanin Alipourfard, Kristina Lerman, Hrayr Harutyunyan,
+     Greg Ver Steeg, and Aram Galstyan. Mixhop: Higher-order graph convolutional architectures via sparsified
+     neighborhood mixing. In Proceedings of the 36th International Conference on Machine Learning, (ICML 2019),
+     pages 21–29, Long Beach, California, USA, 9-15 June 2019. PMLR.
+[20] Eric Jang, Shixiang Gu, and Ben Poole. Categorical reparameterization with gumbel-softmax. In Proceedings of
+     the 5th International Conference on Learning Representations 2017 (ICLR 2017), Toulon, France, 24 - 26 April,
+     2017 2017.
+[21] Chris J. Maddison, Andriy Mnih, and Yee Whye Teh. The concrete distribution: A continuous relaxation of
+     discrete random variables. In Proceedings of the 5th International Conference on Learning Representations 2017
+     (ICLR 2017), Toulon, France, 24 - 26 April, 2017 2017.
+[22] Michael Gutmann and Aapo Hyvärinen. Noise-contrastive estimation of unnormalized statistical models, with
+     applications to natural image statistics. Journal of Machine Learning Research, 13:307–361, 2012.
+[23] Anton Tsitsulin, John Palowitch, Bryan Perozzi, and Emmanuel Müller. Graph clustering with graph neural
+     networks. Journal of Machine Learning Research, 24:127:1–127:21, 2023.
+[24] Prithviraj Sen, Galileo Namata, Mustafa Bilgic, Lise Getoor, Brian Gallagher, and Tina Eliassi-Rad. Collective
+     classification in network data. AI Magazine, 29(3):93–106, 2008.
+[25] Julian J. McAuley, Christopher Targett, Qinfeng Shi, and Anton van den Hengel. Image-based recommendations
+     on styles and substitutes. In Proceedings of the 38th International ACM SIGIR Conference on Research and
+     Development in Information Retrieval (SIGIR 2015), pages 43–52, Santiago, Chile, 9-13 Aug, 2015 2015. ACM.
+
+
+                                                         12
+[26] Péter Mernyei and Catalina Cangea. Wiki-cs: A wikipedia-based benchmark for graph neural networks. CoRR,
+     abs/2007.02901, 2020.
+[27] Thomas N. Kipf and Max Welling. Semi-supervised classification with graph convolutional networks. In
+     Proceedings of the 5th International Conference on Learning Representations (ICLR 2017), Toulon, France, 24 -
+     26 April, 2017. OpenReview.net.
+[28] Keyulu Xu, Weihua Hu, Jure Leskovec, and Stefanie Jegelka. How powerful are graph neural networks? In
+     Proceedings of the 7th International Conference on Learning Representations (ICLR 2019), New Orleans, LA,
+     USA, May 2019. OpenReview.net.
+[29] Petar Velickovic, Guillem Cucurull, Arantxa Casanova, Adriana Romero, Pietro Liò, and Yoshua Bengio. Graph
+     attention networks. In Proceedings of the 6th International Conference on Learning Representations (ICLR 2018),
+     Vancouver, BC, Canada, Apr 2018. OpenReview.net.
+[30] William L. Hamilton, Zhitao Ying, and Jure Leskovec. Inductive representation learning on large graphs. In
+     Proceedings of the 30th Annual Conference on Neural Information Processing Systems (NeurIPS 2017), pages
+     1024–1034, Long Beach, CA, USA, Dec 2017.
+[31] Ladislav Rampásek, Michael Galkin, Vijay Prakash Dwivedi, Anh Tuan Luu, Guy Wolf, and Dominique Beaini.
+     Recipe for a general, powerful, scalable graph transformer. In Proceedings of the 35th Annual Conference on
+     Neural Information Processing Systems (NeurIPS 2022), 2022.
+
+
+
+
+                                                        13
+

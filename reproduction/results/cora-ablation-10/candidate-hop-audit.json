@@ -1,0 +1,14 @@
+{
+  "equation": "uploaded paper page4 Eq.(2): reachability within k=3 versus source T^3 threshold",
+  "paper_within3_same_community_nonadjacent_pairs": 68063,
+  "after_extra_hard_degree_gap_at_most1": 24731,
+  "after_exact3_walk_requirement": 23423,
+  "actual_B_candidate_pairs": 11482,
+  "within3_degree_filtered_pairs_missed_by_exact3": 1308,
+  "degree1_nodes": 485,
+  "same_community_degree1_pairs_at_distance2": 75,
+  "such_leaf_pairs_present_in_B": 0,
+  "degree1_nodes_without_B_candidates": 246,
+  "degree1_nodes_without_within3_degree_filtered_candidates": 209,
+  "note": "No training inputs modified. Differences include a hard degree-gap filter, exact-walk parity and probability threshold; counts alone do not estimate accuracy effects."
+}

@@ -1,0 +1,64 @@
+--- official/models.py
++++ local/models.py
+@@ -27,7 +27,7 @@
+ class Transformer(nn.Module):
+ 	def __init__(self, in_dim, out_dim, n_classes, hidden_dim, num_layers, num_heads, k_transition, aug_check,
+ 				 sim_check,
+-				 phi_check, alfa, beta):
++				 phi_check, alfa, beta, dropout=0.5):
+ 		super().__init__()
+ 		self.h = None
+ 		self.embedding_h = nn.Linear(in_dim, hidden_dim, bias=False)
+@@ -45,9 +45,9 @@
+ 		self.gcn = GCN(in_dim, hidden_dim, self.afla, self.beta)
+ 
+ 		self.layers = nn.ModuleList(
+-			[GraphTransformerLayer(hidden_dim, hidden_dim, num_heads, sim_check, phi_check) for _ in range(num_layers)])
++			[GraphTransformerLayer(hidden_dim, hidden_dim, num_heads, sim_check, phi_check, dropout) for _ in range(num_layers)])
+ 
+-		self.layers.append(GraphTransformerLayer(hidden_dim, out_dim, num_heads, sim_check, phi_check))
++		self.layers.append(GraphTransformerLayer(hidden_dim, out_dim, num_heads, sim_check, phi_check, dropout))
+ 
+ 		self.MLP_layer_x = Reconstruct_X(out_dim, in_dim)
+ 
+@@ -102,13 +102,14 @@
+ class GraphTransformerLayer(nn.Module):
+ 	"""Graph Transformer Layer"""
+ 
+-	def __init__(self, in_dim, out_dim, num_heads, sim_check, phi_check):
++	def __init__(self, in_dim, out_dim, num_heads, sim_check, phi_check, dropout=0.5):
+ 		super().__init__()
+ 
+ 		self.sim_check = sim_check
+ 		self.phi_check = phi_check
+ 
+ 		self.in_channels = in_dim
++		self.dropout = dropout
+ 		self.out_channels = out_dim
+ 		self.num_heads = num_heads
+ 
+@@ -143,7 +144,7 @@
+ 		h = self.FFN_layer1(h)
+ 		h = F.relu(h)
+ 
+-		h = F.dropout(h, 0.5, training=self.training)
++		h = F.dropout(h, getattr(self, 'dropout', 0.5), training=self.training)
+ 		h = self.FFN_layer2(h)
+ 		h = h_in2 + h  # residual connection
+ 		h = self.layer_norm2(h)
+@@ -243,7 +244,7 @@
+ 
+ 		edge_probs[edge_probs > 1] = 1
+ 
+-		edge_probs = edge_probs.cuda()
++		edge_probs = edge_probs.to(device_2)
+ 		check_nan = False
+ 		while True:
+ 			# try:
+@@ -466,4 +467,4 @@
+ 	def func(edges):
+ 		return {'e_out': edges.data[edge_feat]}
+ 
+-	return func
+\ No newline at end of file
++	return func

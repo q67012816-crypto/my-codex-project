@@ -1,0 +1,12 @@
+{
+  "overall_training_budget_minutes": 180,
+  "budget_assumption": "Fixed maximum training duration: 180 minutes.",
+  "budget_start_utc": "2026-11-01T01:18:29.976459+00:00",
+  "stage4_target_pairs": 30,
+  "stage4_max_minutes": 100,
+  "stage5_seed": 100,
+  "stage5_candidates": 16,
+  "stage5_max_minutes": 75,
+  "stage5_scope": "One split pilot; validation-only choice then winner/reference test. Not a repeated paper reproduction.",
+  "original_command": "Blocked by missing dependency and unavailable CUDA; downstream experiments explicitly retain the existing CPU protocol."
+}

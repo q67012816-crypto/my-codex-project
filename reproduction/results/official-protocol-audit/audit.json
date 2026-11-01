@@ -1,0 +1,103 @@
+{
+  "source_sha256": {
+    "README.md": "370a0e768bac8536445b8b3a06bdcaf3cdae8cff0fc2f14d512bf605a0213a91",
+    "exp.py": "2a2c899939d0181e75b64e29a2ff50f905040be6622e80cf1c62ea41da916e4f",
+    "script_classification.py": "229112cccfef2ad7327da5c9be8514e816333ba7b7e861cf2fe27a1a388a53da",
+    "gnnutils.py": "876223f11cb7e67845b6b3c8b6e8390cf3487be28b1ed7d6bba0b04be3f74098",
+    "models.py": "0d45eabed7de543595a0482d863b8831111b2f4246c8ee1df69f070a15e52cb7",
+    "util.py": "b64a8d7379932213c066a9041cab9f60c45f05b7d000480574124242b04f6e23"
+  },
+  "defaults": {
+    "dataset": "cora",
+    "model": "Transformer",
+    "run_times": 1,
+    "drop": 0.5,
+    "custom_masks": true,
+    "device": "cuda:0",
+    "device_2": "cuda:0",
+    "lr": 0.001,
+    "epochs": 3,
+    "dims": 64,
+    "out_size": 64,
+    "k_transition": 3,
+    "num_layers": 4,
+    "num_heads": 2,
+    "output_path": "outputs/",
+    "pretrain_check": 0,
+    "aug_check": 1,
+    "sim_check": 1,
+    "phi_check": 1,
+    "alfa": 0.1,
+    "beta": 0.9,
+    "run_times_fine": 200,
+    "index_excel": -1,
+    "file_name": "outputs_excels/cora.xlsx",
+    "alpha_1": 1,
+    "alpha_2": 1,
+    "alpha_3": 1,
+    "test_node_degree": 0
+  },
+  "cuda_devices": 0,
+  "cuda_allocation_probe": {
+    "type": "AssertionError",
+    "message": "Torch not compiled with CUDA enabled"
+  },
+  "environment": {
+    "python": "3.10.22",
+    "torch": "2.0.1+cpu",
+    "dgl": "1.1.2"
+  },
+  "evaluation_probe": {
+    "scope": "Two eval forwards on a 20-node graph, original source, only CUDA calls adapted to CPU; no optimization.",
+    "encoder_parameter_tensors": 137,
+    "all_encoder_parameters_enabled_and_in_optimizer": true,
+    "model_training_flag": false,
+    "sampled_graphs": [
+      {
+        "directed_edges": 32,
+        "sha256": "adc42d95c4af855fada1f9c3cd99320882a732eb098929196c04c4c70821526d"
+      },
+      {
+        "directed_edges": 32,
+        "sha256": "259f2f312e6b41239140c33a75495eb107d8c0a3f62508561185b9d72f7b19a3"
+      }
+    ],
+    "eval_resamples_graph": true,
+    "frozen_embedding_classifier": false
+  },
+  "single_gpu_pretraining_probe": {
+    "simulated_cuda_devices": 1,
+    "error_type": "UnboundLocalError",
+    "message": "local variable 'h' referenced before assignment",
+    "source": "Unmodified train function AST, no CUDA operation or optimizer step executed."
+  },
+  "precision_projections": [
+    {
+      "total_paired_seeds": 30,
+      "approximate_half_width_95": 0.8871637990497327,
+      "additional_training_jobs": 40,
+      "serial_minutes_at_user_assumption_5min_each": 200
+    },
+    {
+      "total_paired_seeds": 50,
+      "approximate_half_width_95": 0.67521429577277,
+      "additional_training_jobs": 80,
+      "serial_minutes_at_user_assumption_5min_each": 400
+    }
+  ],
+  "stage4_status": "pending: keep one fixed, executable protocol before extending paired seeds",
+  "stage5_status": "pending: original CUDA entry has not completed; no claim of paper selection bias",
+  "grid_values": [
+    0.2,
+    0.4,
+    0.6,
+    0.8
+  ],
+  "grid_pairs": 16,
+  "grid_cost": {
+    "one_seed_training_jobs": 16,
+    "ten_seeds_training_jobs": 160,
+    "ten_seeds_serial_minutes_at_5min": 800
+  },
+  "original_command_accuracy": null
+}

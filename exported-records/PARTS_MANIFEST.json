@@ -1,0 +1,119 @@
+{
+  "archive_name": "cgt-complete-records.tar.gz",
+  "archive_bytes": 1060960887,
+  "archive_sha256": "14381f7281fa825a37d9c737f734276f977aea21fd96f9b78f60dfa96403abf9",
+  "chunk_size_bytes": 50331648,
+  "part_count": 22,
+  "parts": [
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part001",
+      "bytes": 50331648,
+      "sha256": "3f5101820adedf25fc3f28106898194b68d57acc0f64c6ac11515b8bbefc5495"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part002",
+      "bytes": 50331648,
+      "sha256": "b7eb3190ce300e89c6ca9d4083e98236cf4acafa4e99e528c8c6517f0e16b98e"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part003",
+      "bytes": 50331648,
+      "sha256": "869301b111b91593c3e2777634f05110b06b11d5aec47c638635fa2749459d80"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part004",
+      "bytes": 50331648,
+      "sha256": "416b3078cc49834929161847a37a6ef15add25dc4ec5046e80948afdf39827a2"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part005",
+      "bytes": 50331648,
+      "sha256": "4d4c0b07029175a725c7707b5a43b0b8bb9b3d902584d64ebf95ea9d48ba99cf"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part006",
+      "bytes": 50331648,
+      "sha256": "b4e84d96f31352744ab6147e2c6266ac992aa56867be5363fce7ef408c446ddf"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part007",
+      "bytes": 50331648,
+      "sha256": "041232c6bb3287710d80621e4f2fa349aa440fda9de26d2d9dd9867746a4cff8"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part008",
+      "bytes": 50331648,
+      "sha256": "9da1df9ae887d45481eae0d4538699ce2f2fd69267fabe92fd5ae1275dd04209"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part009",
+      "bytes": 50331648,
+      "sha256": "096e98b282923f120ea35818a83aeeaaa74f753ed4a18e580f07901e1218f0ea"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part010",
+      "bytes": 50331648,
+      "sha256": "90967a2f83cb68cd550e5378d3e7e3bce1f303fa008de1827a52ec8908784f83"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part011",
+      "bytes": 50331648,
+      "sha256": "2d9c5c3733c1e83fed041b418e3f23db8bf449d4a8e3541b7afa547d03b4d4a1"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part012",
+      "bytes": 50331648,
+      "sha256": "25d7a2b90e9f93ed2ee4b3382b2ac9195023b1e31decf40a3538949340d22930"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part013",
+      "bytes": 50331648,
+      "sha256": "655f20fa1b0ba63532f2378f5562abdc723c8a413ed072842e89d94ee63c1f01"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part014",
+      "bytes": 50331648,
+      "sha256": "5eeb1a872f9f4c114f229bb54b983c31e076999f5d61d9086762a1837f05938a"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part015",
+      "bytes": 50331648,
+      "sha256": "52511e95973cde163539259ba421ae193102a357cc62fe922ab7927c28d76e6a"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part016",
+      "bytes": 50331648,
+      "sha256": "5460fa592df768fcea071f04ca46debdb8136428ba6cfeeb1281cce78e4e43d1"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part017",
+      "bytes": 50331648,
+      "sha256": "e97916c2cf40b04c50a91083c3b8d986eddd5a5150bbaf08223255603ad29296"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part018",
+      "bytes": 50331648,
+      "sha256": "3e02fbb8450fb39d22fed0a170f85fec689c6f5548f2f6e0104c119ed87229f4"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part019",
+      "bytes": 50331648,
+      "sha256": "c427af120a3268f6940f79bdcc9116e94ffc305308a7cc6a2821151ccec3aa5c"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part020",
+      "bytes": 50331648,
+      "sha256": "1440c662e19755b4773f55af3203e3f5e2de0bc459e6f5a999f3eb264a9e7c79"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part021",
+      "bytes": 50331648,
+      "sha256": "5149f31e15456c3afdc9f174440c07f61d08afd9d02546dd602b569576845b05"
+    },
+    {
+      "file": "parts/cgt-complete-records.tar.gz.part022",
+      "bytes": 3996279,
+      "sha256": "87fa1c5f79c58cf589f9aa4935e5fcb6a670998fec1f428c47ac4ec3e591d48c"
+    }
+  ]
+}

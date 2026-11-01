@@ -1,0 +1,45 @@
+{
+  "head": "948f25477eb0253873ffdf6d38fcf53f258fdd83",
+  "shallow": false,
+  "core_files": {
+    "models.py": {
+      "commit": "e2a9bc2be72955122ad04ec68629410306457f03",
+      "committer_datetime": "2023-12-28T14:29:00+09:00",
+      "subject": "CGT v1"
+    },
+    "util.py": {
+      "commit": "e2a9bc2be72955122ad04ec68629410306457f03",
+      "committer_datetime": "2023-12-28T14:29:00+09:00",
+      "subject": "CGT v1"
+    },
+    "gnnutils.py": {
+      "commit": "e2a9bc2be72955122ad04ec68629410306457f03",
+      "committer_datetime": "2023-12-28T14:29:00+09:00",
+      "subject": "CGT v1"
+    },
+    "exp.py": {
+      "commit": "e2a9bc2be72955122ad04ec68629410306457f03",
+      "committer_datetime": "2023-12-28T14:29:00+09:00",
+      "subject": "CGT v1"
+    },
+    "README.md": {
+      "commit": "948f25477eb0253873ffdf6d38fcf53f258fdd83",
+      "committer_datetime": "2025-08-27T11:30:20+09:00",
+      "subject": "Update README.md"
+    }
+  },
+  "interpretation": "Core files last changed in 2023 CGT v1; README updated in 2025. Dates alone do not prove a model mismatch; request the authors exact paper commit before assuming full correspondence.",
+  "older_paper_check": {
+    "source": "https://arxiv.org/pdf/2312.16788",
+    "version": "2312.16788v1",
+    "pdf_sha256": "93865da9ea350691a9144da757a16fe32d54b17bfcc5d4e9f83bc089d232096e",
+    "same_classification_targets": true,
+    "classification_targets": {
+      "Cora": 87.1,
+      "Citeseer": 76.59,
+      "Photo": 95.73
+    },
+    "caveat": "Older paper already reports the same classification targets. Core-file dates alone cannot explain the accuracy gap.",
+    "candidate_definition": "Older Eq.(2) uses A^(k)>0 and k-step language without the explicit cumulative sum that appears in the uploaded 2025 Eq.(2)."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "paired": {
+    "verified_pairs": 30,
+    "target_pairs": 30,
+    "target_reached": true,
+    "actual_layer_switches_verified": true,
+    "finite_weights_and_full_epochs_verified": true,
+    "paired_intervals_independently_verified": true
+  },
+  "grid": {
+    "verified_candidates": 16,
+    "validation_only_selection_verified": true,
+    "test_after_locked_selection_verified": true,
+    "scope": "one preregistered split only"
+  },
+  "fine_tuning_lr_probe_verified": true
+}

@@ -1,0 +1,8 @@
+{
+  "orchestrator_pid": 36828,
+  "orchestrator_paused": false,
+  "paused_utc": "2026-11-01T02:11:46.569656+00:00",
+  "reason": "Hold grid scheduling until all30pairedseeds are complete; global180minute deadline remains anchored in the paused process.",
+  "resumed_utc": "2026-11-01T02:54:46.265645+00:00",
+  "completed_pairs_at_resume": 30
+}

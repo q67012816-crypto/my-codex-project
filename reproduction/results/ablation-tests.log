@@ -1,0 +1,11 @@
+test_fixed_sampler_values_rng_and_grad_guard (test_ablation.AblationTests) ... ok
+test_switches_control_executed_branches_and_survive_checkpoint (test_ablation.AblationTests) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.175s
+
+OK
+Loading Transformer_class /tmp/tmpox9vj95p/pretrain.pt
+Loading Transformer_class /tmp/tmpci1xc_dx/pretrain.pt
+Loading Transformer_class /tmp/tmp2ps78lyv/pretrain.pt
+Loading Transformer_class /tmp/tmpbbylswv6/pretrain.pt

@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "scope": "full",
+  "group_observations": 50,
+  "new_formal_runs": 40,
+  "reused_baseline_runs": 10,
+  "groups": {
+    "none-p3": {
+      "runs": 10,
+      "distinct_splits": 10,
+      "matches_reference_splits": true,
+      "actual_layer_switches_verified": true
+    },
+    "attention-p3": {
+      "runs": 10,
+      "distinct_splits": 10,
+      "matches_reference_splits": true,
+      "actual_layer_switches_verified": true
+    },
+    "augmentation-p3": {
+      "runs": 10,
+      "distinct_splits": 10,
+      "matches_reference_splits": true,
+      "actual_layer_switches_verified": true
+    },
+    "full-p3": {
+      "runs": 10,
+      "distinct_splits": 10,
+      "matches_reference_splits": true,
+      "actual_layer_switches_verified": true
+    },
+    "full-p4": {
+      "runs": 10,
+      "distinct_splits": 10,
+      "matches_reference_splits": true,
+      "actual_layer_switches_verified": true
+    }
+  },
+  "paired_comparisons_verified": true,
+  "sampler_control": {
+    "passed": true,
+    "seed": 42,
+    "full_epochs": true,
+    "identical_history_predictions_weights": true
+  }
+}

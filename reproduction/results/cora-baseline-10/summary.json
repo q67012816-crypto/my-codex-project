@@ -1,0 +1,66 @@
+{
+  "status": "completed",
+  "completed_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "failures": {},
+  "required_runs": 10,
+  "completed_runs": 10,
+  "protocol": {
+    "dataset": "Cora",
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "pretrain_epochs": 500,
+    "finetune_epochs": 200,
+    "source_sha256": {
+      "train_cora.py": "3eee205a6bff6b3d5d42d6f65fc4be784d770459dc38e2eb6ddd9790deeccb9b",
+      "paper_protocol.py": "86d901185db1e40829b25fda06cfddd472c5780e56bd70ab3d0bb52dc21dfe74",
+      "vendor/cgt/models.py": "88763c772109a93a560e699e3da27f4a8d97311ce957f4f78c5e6ee370ae7056",
+      "vendor/cgt/util.py": "b64a8d7379932213c066a9041cab9f60c45f05b7d000480574124242b04f6e23"
+    },
+    "purpose": "CGT repository baseline with audited paper settings; known deviations retained",
+    "finetune_epochs_source": "repository working choice; not specified by paper",
+    "split": "random 60/20/20 with upstream integer rounding",
+    "primary_std": "sample standard deviation, ddof=1; paper does not specify ddof"
+  },
+  "elapsed_seconds": 3162.614570343,
+  "accuracy_percent": {
+    "mean": 83.99260520935059,
+    "std_sample": 1.8611178745609387,
+    "std_population": 1.7656114432992338,
+    "paper_mean": 87.1,
+    "mean_minus_paper": -3.1073947906494084
+  },
+  "delta_sp_percent": {
+    "mean": 6.031746031746032,
+    "std_sample": 2.037017949626936,
+    "std_population": 1.932484906640177,
+    "paper_mean": 3.46,
+    "mean_minus_paper": 2.5717460317460317
+  },
+  "remaining_deviations": [
+    "upstream augmentation uses fixed probabilities and nondifferentiable edge indices; BCE has no trainable gradient",
+    "upstream classification applies softmax before cross entropy",
+    "upstream structural filtering/attention have not been fully reimplemented from equations",
+    "feature norm interpreted as flattened L2; BCE uses PyTorch endpoint clamp"
+  ]
+}

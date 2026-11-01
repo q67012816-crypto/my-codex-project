@@ -1,0 +1,149 @@
+loading dgl...
+networkx: number edges: 10556
+loading dgl, done, DGL graph edges: 10556
+{
+  "effective_config": {
+    "layers": 4,
+    "heads": 4,
+    "clusters": 5,
+    "dropout": 0.1,
+    "hidden_dim": 64,
+    "lr": 0.0001,
+    "weight_decay": 1e-05,
+    "alpha": 1.0,
+    "beta1": 0.5,
+    "beta2": 0.5,
+    "xi": 0.8,
+    "zeta": 0.2,
+    "transition_steps": 3
+  },
+  "actual_layers": 4
+}
+{"phase": "pretrain", "epoch": 1, "loss": 350400.3555779457, "transition": 0.5609897971153259, "feature": 0.1501661241054535, "augmentation": 350400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 2, "loss": 363600.3330450058, "transition": 0.5226680040359497, "feature": 0.1434219926595688, "augmentation": 363600.0, "augmentation_has_gradient": false}
+Loading Transformer_class reproduction/runs/loss-control-smoke/pretrained.pt
+{"phase": "finetune", "epoch": 1, "loss": 1.9430447816848755, "validation_accuracy": 0.11645101755857468}
+{"phase": "finetune", "epoch": 2, "loss": 1.9407901763916016, "validation_accuracy": 0.12014787644147873}
+{"phase": "finetune", "epoch": 3, "loss": 1.93824303150177, "validation_accuracy": 0.16266173124313354}
+{
+  "model": "CGT controlled ablation",
+  "case": "full",
+  "switches": {
+    "aug": 1,
+    "sim": 1,
+    "phi": 1
+  },
+  "reconstruction_steps": 3,
+  "structural_transition_steps": 3,
+  "sampler": "fast",
+  "upstream_commit": "948f25477eb0253873ffdf6d38fcf53f258fdd83",
+  "purpose": "paper-parameter alignment; remaining implementation differences documented",
+  "dataset": "Cora",
+  "seed": 42,
+  "device": "cpu",
+  "nodes": 2708,
+  "features": 1433,
+  "directed_edges": 10556,
+  "split_counts": {
+    "train": 1626,
+    "validation": 541,
+    "test": 541
+  },
+  "pretrain_epochs": 2,
+  "finetune_epochs": 3,
+  "effective_config": {
+    "layers": 4,
+    "heads": 4,
+    "clusters": 5,
+    "dropout": 0.1,
+    "hidden_dim": 64,
+    "lr": 0.0001,
+    "weight_decay": 1e-05,
+    "alpha": 1.0,
+    "beta1": 0.5,
+    "beta2": 0.5,
+    "xi": 0.8,
+    "zeta": 0.2,
+    "transition_steps": 3
+  },
+  "actual_attention_layers": 4,
+  "cache_key": "e8093fc5d33410b2",
+  "pretraining_loss_reduction": "transition sum / (p*N*N) and feature MSE; probability BCE unchanged",
+  "control_profile": "reconstruction normalization only; not an exact replay of original full training code",
+  "finetune_epochs_source": "working choice; not specified by paper",
+  "remaining_deviations": [
+    "upstream augmentation uses fixed probabilities and nondifferentiable edge indices; BCE has no trainable gradient",
+    "upstream classification applies softmax before cross entropy",
+    "upstream structural filtering/attention have not been fully reimplemented from equations",
+    "normalized reconstruction control uses transition mean and feature MSE; BCE endpoint clamp remains"
+  ],
+  "best_validation_epoch": 3,
+  "best_validation_accuracy": 0.16266173124313354,
+  "test_accuracy": 0.17744916677474976,
+  "delta_sp": 0.01851851851851852,
+  "delta_sp_percent": 1.851851851851852,
+  "delta_sp_status": "Eq. (17), r=1, floor and node-id tie policy; see fairness.json",
+  "elapsed_seconds": 8.344848404000004,
+  "history": [
+    {
+      "phase": "pretrain",
+      "epoch": 1,
+      "loss": 350400.3555779457,
+      "transition": 0.5609897971153259,
+      "feature": 0.1501661241054535,
+      "augmentation": 350400.0,
+      "augmentation_has_gradient": false
+    },
+    {
+      "phase": "pretrain",
+      "epoch": 2,
+      "loss": 363600.3330450058,
+      "transition": 0.5226680040359497,
+      "feature": 0.1434219926595688,
+      "augmentation": 363600.0,
+      "augmentation_has_gradient": false
+    },
+    {
+      "phase": "finetune",
+      "epoch": 1,
+      "loss": 1.9430447816848755,
+      "validation_accuracy": 0.11645101755857468
+    },
+    {
+      "phase": "finetune",
+      "epoch": 2,
+      "loss": 1.9407901763916016,
+      "validation_accuracy": 0.12014787644147873
+    },
+    {
+      "phase": "finetune",
+      "epoch": 3,
+      "loss": 1.93824303150177,
+      "validation_accuracy": 0.16266173124313354
+    }
+  ],
+  "versions": {
+    "python": "3.10.22",
+    "torch": "2.0.1+cpu",
+    "pyg": "2.3.1",
+    "dgl": "1.1.2"
+  },
+  "raw_data_sha256": {
+    "ind.cora.allx": "9419ba2f26f5c35243db64aba110e0f35a04851609e0dc5433450676ca6b8543",
+    "ind.cora.ally": "2b998f5cc7fedc86e7f97ca2498f47a1ffc1462c29e2d578b23bf3f62b6e7d71",
+    "ind.cora.graph": "58f13302f39dde8852dad6fe6d15b89b077b6d7f837626bce671ef80344b383d",
+    "ind.cora.test.index": "297ce89af2b51a6a194181c7dbe1796c6a1cf9cd9349a88383b1b1e227867875",
+    "ind.cora.tx": "b9afbaa4a400df991f6f02ef677e1e44da55ffc04801fd02f9e673987829226a",
+    "ind.cora.ty": "41f5ac76596a1699cc33f53084a2419e92961c42bb75f36fc38e616d348532ad",
+    "ind.cora.x": "23cfa55d91c6f624233f5eb7b6e3f141f1bd2b2ae39608a63cf5d084bb27baab",
+    "ind.cora.y": "94465c14eb53e04ca262198dcbb2521ee8af60fb3f3d546cd6ca24a511b0e7d1"
+  },
+  "source_sha256": {
+    "train_loss_control.py": "8318b7ceed8988ad042630007834b0424dcd9035631b9964263a013d748e157c",
+    "loss_convention_control.py": "d5aec012cc7d55d73bff1a05a89032b2d6eeedd244d36d1c62fb9316e487d956",
+    "ablation_protocol.py": "988c8f9998654f073762c4a3cf4fe8965a51d5d34e87539839e08f39c9e63605",
+    "paper_protocol.py": "86d901185db1e40829b25fda06cfddd472c5780e56bd70ab3d0bb52dc21dfe74",
+    "vendor/cgt/models.py": "88763c772109a93a560e699e3da27f4a8d97311ce957f4f78c5e6ee370ae7056",
+    "vendor/cgt/util.py": "b64a8d7379932213c066a9041cab9f60c45f05b7d000480574124242b04f6e23"
+  }
+}

@@ -1,0 +1,207 @@
+{
+  "clusters": 5,
+  "cluster_sizes": [
+    1348,
+    384,
+    516,
+    1,
+    459
+  ],
+  "initial_features_shape": [
+    2708,
+    1433
+  ],
+  "kmeans_random_state": 0,
+  "existing_edge_same_community_fraction": 0.5073891878128052,
+  "B_mean_existing_same": 0.0,
+  "B_mean_existing_cross": 0.0,
+  "B_nonzero_fraction": 0.0031314841471612453,
+  "B_nonzero_existing_edges": 0,
+  "B_cross_community_nonzeros": 0,
+  "B_within_community_nonzeros": 22964,
+  "candidate_new_edges": 11482,
+  "xi_current": 0.8,
+  "zeta_current": 0.2,
+  "checkpoint_actual_settings": [
+    {
+      "seed": 42,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "seed": 43,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "seed": 44,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "seed": 45,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "seed": 46,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "seed": 47,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "seed": 48,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "seed": 49,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "seed": 50,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "seed": 51,
+      "zeta": 0.2,
+      "xi": 0.8,
+      "aug": 1,
+      "sim_flags": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "phi_flags": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ]
+}

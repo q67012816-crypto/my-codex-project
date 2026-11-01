@@ -1,0 +1,1798 @@
+OCR transcription for search only; equations and tables were verified visually against the uploaded PDF.
+
+
+===== PDF page 1 =====
+2504.15075v1 [cs.AI] 21 Apr 2025
+
+arXiv
+
+Mitigating Degree Bias in Graph Representation
+Learning with Learnable Structural
+
+Augmentation and Str
+
+uctural Self-Attention
+
+Van Thuy Hoang ®, Hyeon-Ju Jeon ®, and O-Joun Lee ®
+
+Abstract—Graph Neural Networks (GNNs) update node representations through message passing, which is primarily based on the
+homophily principle, assuming that adjacent nodes share similar features. However, in real-world graphs with long-tailed degree
+distributions, high-degree nodes dominate message passing, causing a degree bias where low-degree nodes remain
+under-represented due to inadequate messages. The main challenge in addressing degree bias is how to discover non-adjacent nodes
+to provide additional messages to low-degree nodes while reducing excessive messages for high-degree nodes. Nevertheless,
+exploiting non-adjacent nodes to provide valuable messages is challenging, as it could generate noisy information and disrupt the
+original graph structures. To solve it, we propose a novel Degree Fairness Graph Transformer, named DegFairGT, to mitigate degree
+bias by discovering structural similarities between non-adjacent nodes through learnable structural augmentation and structural
+self-attention. Our key idea is to exploit non-adjacent nodes with similar roles in the same community to generate informative edges
+under our augmentation, which could provide informative messages between nodes with similar roles while ensuring that the
+homophily principle is maintained within the community. By considering the structural similarities among non-adjacent nodes to
+generate informative edges, DegFairGT can overcome the imbalanced messages while still preserving the graph structures. To enable
+DegFairGT to learn such structural similarities, we then propose a structural self-attention to capture the similarities between node
+pairs. To preserve global graph structures and prevent graph augmentation from hindering graph structure, we propose a
+Self-Supervised Learning task to preserve p-step transition probability and regularize graph augmentation. Extensive experiments on
+six datasets showed that DegFairGT outperformed state-of-the-art baselines in degree fairness analysis, node classification, and node
+
+clustering tasks.
+
+Index Terms—Degree Unbiases, Learnable Graph Augmentation, Graph Transformer, Graph Clustering, Graph Representation
+
+Learning.
+
++
+1 INTRODUCTION
+
+Graphs provide a robust framework for capturing com-
+plex data by representing the relationships among entities
+in a wide range of domains, such as molecular structures
+and social networks [1]. However, real-world graphs often
+have long-tailed degree distributions, which could nega-
+tively affect GNNs’ ability to learn low and high-degree
+nodes [2]. That is, GNNs update node representations by
+aggregating information from neighboring nodes through
+message passing, following the homophily principle, which
+assumes that connected nodes tend to have similar fea-
+tures. As a result, low-degree nodes receive a few mes-
+sages from neighborhoods, which can cause bias or under-
+representation. Meanwhile, high-degree nodes receive over-
+abundant messages, leading to inherent limitations of mes-
+sage passing, e.g., over-smoothing problems [3]. To illustrate
+this problem, Figure 1 shows that GT [4], one of the recent
+graph transformer models, exhibits degree bias on Photo
+and Computers datasets [5]. We can intuitively infer that
+the degree bias problem arises from insufficient messages
+from correlated nodes, not merely from the number of
+
+e Van Thuy Hoang and O-Joun Lee are with the Department of Ar-
+tificial Intelligence, The Catholic University of Korea, 43, Jibong-ro,
+Bucheon-si, Gyeonggi-do 14662, Republic of Korea (email: hoangvan-
+thuy90@catholic.ac.kr, ojlee@catholic.ac.kr)
+
+e Hyeon-Ju Jeon is with Data Assimilation Group, Korea Institute of
+Atmospheric Prediction Systems (KIAPS), 35, Boramae-ro 5-gil, Dongjak-
+gu, Seoul 07071, Republic of Korea (email: hjjeon@kiaps.org)
+
+0.6
+
+— Photo
+—— Computers
+
+0.4
+
+0.2
+
+Error rate
+
+0.0 T T T
+5 10 15
+
+Node degree
+
+20 25 30
+
+Fig. 1: Low-degree nodes are more misclassified than other
+nodes in the GT model [4] on Photo and Computers
+datasets. The miss-classification rate is higher for low-
+degree nodes compared to high-degree nodes.
+
+neighbors. This indicates that the graph topology could
+significantly influence the balance of messages under the
+message propagation in GNNs [6].
+
+To address this problem, most recent studies aim to
+deliver additional messages to low-degree nodes or re-
+move redundant messages from high-degree nodes, mainly
+classified into three main groups: graph augmentation, ob-
+servation range expansion, and neighborhood aggregation
+modulation. The graph augmentation-based methods gen-
+erate or remove edges randomly or heuristically to observe
+graphs with different views [7], [8]. The main idea is that
+augmentation schemes, e.g., edge perturbation, will con-
+tinuously change the set of neighbors of each node and
+could help GNNs aggregate more messages to update node
+
+===== PDF page 2 =====
+representations. The graph augmentations involve modify-
+ing graph structures, e.g., adding or removing edges, to
+enhance model performance and address the degree bias
+problem. However, in real-world graphs, graph structures
+often remain stable, reflecting intrinsic relationships and
+dependencies among nodes [9], [10].
+
+Some observation range expansion methods aim to ex-
+pand the range of neighborhoods surrounding target nodes
+to capture high-order relationships and more information
+at each node representation update [11], [12], [13]. Several
+studies aim to adjust the model weights to distill suf-
+ficient messages during the message-passing aggregation
+[14]. Nevertheless, as the degree bias originates from graph
+structure imbalance, aggregation modulation can not adapt
+properly to the varying size and structure graphs.
+
+Although graph neural network strategies have shown
+effectiveness in mitigating degree bias, there are two limita-
+tions in existing studies that still limit their ability. First,
+it is challenging to discover correlated nodes with high
+structural similarity to provide informative messages for
+each target node. Most graph augmentation-based methods
+ignore the structural similarity between node pairs when
+forming edges, forcing GNNs to learn noisy and redundant
+messages. The augmentation methods randomly add or
+drop edges to generate multiple graph views, which could
+mainly benefit low-degree nodes to obtain more messages
+from distant nodes [8], [15], [16]. While randomly adding
+edges can bring more messages from non-adjacent nodes,
+the nodes could contain noisy and irrelevant information,
+which could force GNNs to aggregate redundant messages,
+resulting in suboptimal performance. That is, pairs of nodes
+formed into edges should be strongly correlated to their
+structural similarity, which then could naturally enable
+GNNs to learn their representations and map them closely
+in the latent space. Moreover, randomly dropping edges
+could severely degrade the low-degree node representations
+as they can be more under-represented due to the lack of
+messages. Second, it is challenging to achieve both degree
+fairness and graph structure preservation simultaneously.
+For augmentation-based methods, randomly adding edges
+can hinder preserving the original graph structures since
+any edge connecting two non-adjacent nodes forces GNNs
+to map node representations close significantly. Besides,
+although several methods consider structural features [15],
+their indistinction between generated and original edges
+causes loss of local connectivity and high-order proximity
+[7], [8], [15]. Similarly, some observation range expansion
+methods ignore the distinctive messages between k-hop
+distances rooted at each node to its neighbors and even
+treat k-subgraph neighborhoods as complete graphs [11],
+[17]. The loss of learning structural distance information and
+proximity between non-adjacent nodes hinders GNNs from
+preserving global graph structures.
+
+In this study, we propose a novel framework, DegFairGT,
+to mitigate degree biases via structural graph augmenta-
+tions and graph transformers. The main idea is to exploit
+non-adjacent nodes with high structural similarity to form
+informative edges rather than random edge perturbation
+through graph augmentation, which could generate arbi-
+trary edges and provide noisy information as well as dis-
+rupt the original graph structure. More precisely, we first
+
+(e2 Community, k-hop @High-degree nodes O@ Low-degree nodes
+
+Message passing
+
+on augmented graph
+
+— Adding edges x Removing edges
+
+Fig. 2: Structural graph augmentation adds _ intra-
+community edges between low-degree nodes and removes
+edges between nodes with different degrees or commu-
+nities. Given an input graph (left), our structural graph
+augmentation adds intra-community edges between low-
+degree nodes and removes edges between nodes with dif-
+ferent degrees or communities. Our structural augmentation
+can enable each node to obtain more valuable messages
+from neighbors within the community and k-hop distance
+through message passing (right).
+
+compute a structural similarity score for each node pair,
+which reflects how similar the two nodes are in terms of
+their graph structure. The structural similarities are then
+used as a probability weight for sampling new edges un-
+der our augmentation. By doing so, our augmentation can
+connect correlated non-adjacent nodes with high similarity,
+enabling more balanced messages and enabling the model
+to maintain the homophily principle. To enable DegFairGT
+to learn such structural similarities, we then propose a
+structural self-attention to capture the similarities between
+node pairs. To preserve global graph structures and prevent
+graph augmentation from hindering graph structure, we
+propose a Self-Supervised Learning task to preserve p-step
+transition probability and regularize graph augmentation.
+
+The key challenge of designing structural graph aug-
+mentation is how to sample non-adjacent nodes to generate
+informative edges to mitigate degree biases while preserv-
+ing intrinsic graph structures. That is, when non-adjacent
+node pairs are connected through augmentation, it encour-
+ages GNNs to learn representations that map them closer
+in the latent space [18]. Hence, we introduce a sampling
+method to sample non-adjacent nodes with high similarities
+so that nodes with highly similar roles in the same commu-
+nity are sampled more frequently than other nodes. These
+two aspects align with fundamental principles in graph
+structures, i.e., structural equivalence and the homophily
+principle, ensuring that the augmented graph could provide
+similar features for each pair of nodes while retaining global
+graph connectivity within a community [19]. Intuitively,
+given a target node, we define the context nodes in order
+to be likely sampled to generate informative edges under
+structural augmentation w.r.t (i) they are in the same clusters
+and within a k-hop distance, and (ii) they have a similar
+low-degree together. The structural graph augmentation is
+end-to-end trainable through edge perturbation, making
+itself learn structural similarity between node pairs. To
+illustrate our structural augmentation, Figure 2 shows that
+it could generate more informative intra-community, mainly
+for low-degree nodes, and drop inter-community.
+
+===== PDF page 3 =====
+Although the augmentation module could generate in-
+formative edges, graph transformers are agnostic to learning
+the structural distance and proximity between non-adjacent
+nodes. Note that nodes within k-hop distance within the
+same community tend to share dense connections, showing
+the high-order proximity that could be learned via self-
+attention. Thus, we propose a structural self-attention to
+capture the high-order proximity and the node roles, leading
+to the model’s ability to learn global graph structures. The
+key idea is that we directly encode the high-order prox-
+imity into full dot product attention, enabling DegFairGT
+to discover the proximity and structure information while
+forming query and key matrices.
+
+Our approach aims to address the degree bias problem
+while preserving the global graph topology without requir-
+ing any label information [20]. We achieve this by introduc-
+ing a self-supervised learning task that preserves the global
+graph structure, utilizing the transition probability matrix
+for global graph structure preservation. In addition, we note
+that the graph augmentation could collapse into insignif-
+icant edges and generate inappropriate graphs under the
+edge perturbation, resulting in graph transformers failing
+to learn representations. For example, the augmentation
+module could learn to generate a fully connected graph
+or remove too many edges connecting adjacent nodes that
+retain no original graph structure. Such augmentations are
+not informative as they lose all the structural information
+from the original graph. To mitigate this issue, we incor-
+porate augmentation regularization as an additional self-
+supervised signal to ensure that the graph augmentation
+model still remains the original graph topology. Specifically,
+we employ a binary cross-entropy (BCE) loss to minimize
+the dissimilarity between the augmented adjacency matrix
+and the original adjacency matrix, preventing the loss of
+the graph structure. Finally, we obtain the embeddings
+extracted after the pre-training task for downstream tasks
+such as degree fairness analysis and node classification. To
+the extent of our knowledge, DegFairGT is the first graph
+transformer model addressing degree biases based on graph
+augmentation.
+
+Our contributions can be summarized as follows:
+
+e We propose a structural graph augmentation, gen-
+erating informative edges connecting non-adjacent
+nodes by exploring their correlation with high struc-
+tural similarity. The generating edges between dis-
+tant nodes could then assist the model in mitigating
+degree bias, as low-degree nodes can receive more
+messages from correlated nodes while messages for
+high-degree nodes will be reduced.
+
+« We propose structural self-attention to learn the rela-
+tions between correlated nodes based on their struc-
+tural similarity. The structural self-attention could
+capture the high-order proximity and the node roles,
+leading to the model’s ability to learn global graph
+structures.
+
+« We propose the SSL task to preserve graph structure
+and regularize the graph augmentation. The SSL task
+can allow our model to reconstruct the global graph
+structure without using label information while us-
+ing the augmentation module to mitigate degree bias.
+
+2 RELATED WORK
+
+As degree bias originates from imbalanced distributions
+of the number of neighbors, several studies have pro-
+posed augmentation schemes to modify the neighborhoods
+[7], [21], [22], [23]. Early augmentation methods, e.g.,
+GRACE [24] and RGRL [8], randomly modify input graphs
+and then employ GNNs (Graph Neural Networks) with
+contrastive objectives to learn representations, not consid-
+ering both proximity and structural similarity. GCA [15]
+improves GRACE by using node centrality-based augmen-
+tation that remains edges connecting low-degree nodes and
+connecting high-degree nodes and randomly perturbs other
+edges, regardless of node proximity. GRADE [7] samples k-
+subgraphs rooted in target nodes to generate edges connect-
+ing low-degree nodes within the k-subgraphs and removes
+inter-community edges based on node feature similarity.
+Most heuristic augmentation methods randomly perturb the
+remaining edges not handled by their heuristics, despite the
+possibility of generating noisy edges. In contrast, we sample
+node pairs with high proximity and structural similarity
+using our learnable augmentation that can adapt to various
+graph structures.
+
+The other approaches explore information in multi-hop
+neighborhoods surrounding each target node where node
+homophily is maintained [25], [26]. One of the straightfor-
+ward strategies is to stack more GNN layers to receive mes-
+sages from a wider range of nodes [27], [28]. Several studies
+expand sampling ranges for context nodes to capture more
+messages within k-hops at each layer [12]. SAT [17] uses k-
+subgraphs rooted in target nodes as contexts and employs
+a GNN layer to aggregate node features within the k-
+subgraphs. Several well-known graph transformers, e.g.,
+GT [4] and SAN [29], treat original graphs as fully-connected
+graphs to generate more messages from neighbors. These
+models do not concern noisy signals from structurally
+dissimilar nodes nor consider connectivity among context
+nodes, leading to loss of high-order proximity. Graphformer
+[12] considers k-hop distance between nodes in k-subgraphs
+by modifying self-attention. ANS_GT [30] employs multiple
+sampling strategies based on personalized PageRank, k-
+hop neighborhoods, and node feature similarity. PSGT [31]
+extracts important edges between nodes under the informa-
+tion bottleneck principle. The model then could effectively
+capture multi-scale structures and long-sequence dependen-
+cies by utilizing a relational propagation graph as a novel
+position encoding. UGT [32] generates edges connecting
+distant nodes with structural similarity and uses k-subgraph
+sampling together, regardless of community membership.
+NodeFormer [33] undersamples one-hop neighborhoods
+learnably, which can help reduce noisy signals. EduCross
+[34] integrates bipartite hypergraph learning with adversar-
+ial learning, allowing for effectively capturing high-order
+relationships between nodes. HAQJSK [20] aims to preserve
+hierarchical relationships in graphs by aligning structural
+features at multiple levels. This hierarchical approach im-
+proves representation power by considering local-to-global
+structural patterns. over time, presenting challenges in cap-
+turing temporal dependencies and structural changes. The
+study introduces a novel method that leverages GCNs to ef-
+fectively model these evolving graph structures. DGCN [35]
+
+===== PDF page 4 =====
+introduces a novel Graph Convolutional Network to effec-
+tively capture the global graph structure while maintaining
+local structural information by maximizing the agreement
+between global and local graph structure information. By
+leveraging node degrees, the model then could recognize
+the importance of neighboring to guide the message-passing
+aggregation. In contrast, we discover correlated nodes that
+satisfy structural similarity to avoid noisy messages regard-
+ing homophily and structural equivalence.
+
+Several studies have investigated the influence of de-
+grees on the performance of GNNs to modulate effective
+message aggregation. For example, DegFairGNN [14] aims
+to modulate the neighborhood aggregation for each target
+node at each message passing layer to generate the de-
+biasing context. The idea is to distill information on the
+high-degree nodes and complement information on the low-
+degree node based on the node-degree information. Kojaku
+et. al. [36] focuses on counteracting the sampling of nodes
+in random walks. That is, low-degree nodes will be sampled
+more based on the random walks strategy, which can benefit
+the low-degree node representations. Liu et. al. [37] aims
+to robust low-degree node representations by translating
+neighborhood information from high-degree to low-degree
+adjacent nodes. The idea of GAUG [38] is to preserve the
+intrinsic graph structure while perturbing edges connecting
+low-degree nodes. Jin et. al. [39] addresses the low-degree
+bias directly on perturbed graphs to learn robust representa-
+tions while resisting adversarial influence. RawlsGCN [40]
+focuses on exploring the relations between the node degree
+and the gradient of the weighted matrix at each message
+passing layer to mitigate the model performance disparity.
+However, most existing studies focus on the structural dif-
+ference between nodes to improve the model performance
+rather than address the origin of the degree bias.
+
+3 METHODOLOGY
+
+This section first introduces our learnable structural graph
+augmentation (Sect. 3.1), explains the DegFairGT architec-
+ture in detail (Sect. 3.2), and finally, introduces the SSL task
+for graph structure preservation (Sect. 3.3). Figure 3 shows
+the overall architecture of our framework.
+
+3.1. Learnable Structural Graph Augmentation
+
+Our structural augmentation aims to explore correlated
+nodes that can provide informative messages to learn
+degree-unbiased representations. Let G = (V, A, H) denote
+an input graph, where V refers to the set of nodes, A indi-
+cates the adjacency matrix, and H denotes the initial node
+features. We first compose a modified adjacency matrix A
+by a linear combination of a degree-weighted matrix D and
+the original adjacency matrix A. The matrix D quantifies the
+structural similarity between pairs of nodes without degree
+bias. Then, we obtain an augmented graph G’ = (V, A’, H)
+by applying edge perturbation to A as:
+
+A’ = Ta(A), A=€A+(CD, (1)
+
+where € and ¢ are hyper-parameters, and 7,(-) indicates
+the edge perturbation that is learnable. We now explain the
+strategies for constructing D and T,(-).
+
+3.1.1 Capturing Global Context Nodes in Community
+
+Note that we aim to solve the degree bias problem by
+delivering messages between nodes with high structural
+similarity. In graphs, nodes in the same community tend
+to share globally similar features, showing the homophily
+principle that could benefit models from exploring struc-
+tural similarity between non-adjacent nodes. That is, we
+aim to explore the set of non-adjacent node candidates
+within the same community, which then will be likely to be
+sampled to generate informative edges via our augmenta-
+tion. We argue that homophily and structural equivalence
+between non-adjacent nodes can be explored to generate
+informative edges connecting correlated nodes in terms of
+their proximity and structural similarity [19]. Intuitively, we
+aim to explore context nodes that share the global semantic
+information, ie., similar features, with the target nodes
+through the clustering. We then refine the context nodes
+by removing nodes that are not reachable from the target
+nodes within k-hops as far-apart nodes do not have high
+correlation and proximity even within the same community.
+Specifically, we cluster nodes in a graph into M commu-
+nities (G = {Gi,G2,---,Gm}) by applying the k-means
+clustering to node initial features [41], [42]. We then define
+the context nodes of a target node v; € Gy, as:
+
+N(v;) = {v, € va? >0,0,;€ Gm}, (2)
+
+where A(*) = S7f_, A! is the transition matrix of G at k-step.
+Aw > 0 denotes the reachability between v; and v; within
+k-hops.
+
+3.1.2 Ranking Context Nodes
+
+We note that the set of context nodes can be large as
+nodes are mostly connected densely in the community, even
+within k-hop distance. This could make it challenging to
+discover nodes with high structural similarity to generate
+informative edges for each target node. To solve it, we rank
+the context nodes based on their structural similarity to
+the target nodes with a low-degree bias. The key idea is
+that low-degree nodes are likely to be sampled more to
+generate edges than high-degree nodes that already have
+many edges. Thus, we assign higher priorities to node pairs
+with similar degrees than with different degrees and low-
+than high-degree nodes. Specifically, given a target node
+v3, we rank the context nodes N(v;) 5 v; based on their
+priorities quantified by the inverse of their node degrees,
+1/d; and 1/d,, as:
+1
+
+Diy = Jil,
+where d; and d; denote the degree of nodes v; and vj,
+respectively, and D,; indicates degree-weighted score be-
+tween v; and v;. By doing so, edges connecting nodes
+with similar low degrees could be sampled with a high
+probability. Figure 4 illustrates our augmentation strategy
+with the target node v; and three communities. We first
+sample v;, vz, and v;, as context nodes of v; since they are
+in the same community with v; and within k-hop distance
+from v;. Then, we use Equation 3 to rank the context nodes
+based on their similarity in terms of roles. We then linearly
+combine the original adjacency matrix (A) with the degree-
+weighted score matrix (D) consisting of D,; for every node
+
+,when v; € N(v;), Di; = 0, otherwise, (3)
+
+===== PDF page 5 =====
+Fa allele alee ae alleiaatal Graph Reconstruction Loss -- -----------
+
+' O Low-degree nodes
+
+@ High-degree nodes Ty =
+FT Node features
+
+S High-order proximity
+
+M?-Z-Z?
+
+Degree-weighted
+score J)
+
+4 Learnable Structural Augmentation
+A ig!
+
+beeen eee eee Augmentation Loss D2
+
+4 0.1|0.9/0.8 0.2/0.2
+A\_ |2.9[0.2[0.410.7[0.7| sampling
+—> |0.8{0.4]/0.2[0.1]0.1] ———+] Lat
+5 0.2[0.7[0.1/0.1[0.9
+0.2[0.7[0.1[0.9[0.1] mo o
+
+= BCE(A, A’)-------
+
+Embeddings fings |
+S| layer 1
+Graph |] Ue fee
+Transformer HT heads:
+[am] |
+=<V,A4',H> \ '
+
+L {hi} fh(Dis)
+
+Fig. 3: The overall architecture of DegFairGT. DegFairGT comprises two main blocks: structural graph augmentation and
+structural self-attention. The augmentation module takes the original adjacency matrix A and the degree-weighted score
+D as inputs and then samples edges with probabilities defined in A to generate a new graph G’. After the augmentation,
+the new graph G’ is fed into the graph transformers networks, which then learn the representations Z. The self-attention
+module at layer /-th receives a node feature of the target node hi, the features of neighbouring nodes {hi }, the proximity
+sj, and the structural similarity f4(D;;) between nodes v; and v; as inputs. Finally, the learned representation Z could be
+
+used for various downstream tasks, e.g., node classification.
+
+Community 1
+
+k-hop neighbourhood
+
+O Context nodes
+— Original edges
+Ranking
+context nodes
+|. - - Low probability
+~~ - High probability
+
+Community 3
+
+Fig. 4: For a target node v;, our augmentation samples
+context nodes in the same community and ranks the context
+nodes based on their node degrees within k-hops. Two
+nodes v% and v; have a high correlation with the target node
+v; as they have similar low degrees, respectively.
+
+pair to generate A. In a nutshell, given a target node v;,
+we sample a set of context nodes N(v;) from Equation 2,
+and then compute the degree-weighted score towards low-
+degree nodes based on Equation 3.
+
+To illustrate the sampling bias of the degree-weighted
+matrix D, we conduct a visualization study, as shown in
+Figure 5. This analysis delivers how different node degrees
+influence edge sampling in our model. We observed that
+when v; and v; are low-degree together, D,; will be large
+and close to 1, which can be sampled more frequently to
+make valuable edges for low-degree nodes. This indicates
+that low-degree nodes will be sampled more frequently,
+thereby alleviating the degree problem. In contrast, when
+
+two nodes have high-degree together, the values Dj; will
+be close to 0, which is less sampled to make edges. When
+a node v; has a high degree and node v; has a low degree,
+the value D;; is still relatively small, leading to less frequent
+sampling compared to low-degree pairs.
+
+3.1.3. Edge Perturbation
+
+To generate augmented graphs, we then transform A into
+a new adjacency matrix A’ by sampling with the Bernoulli
+distribution parameterized with the probability in A, as:
+
+A, = Bernoulli (Ai) (4)
+
+To make the Bernoulli sampling function differentiable in an
+end-to-end manner, we utilize the commonly used scheme
+to approximate the Bernoulli sampling in Equation 4. Specif-
+ically, we approximate the Bernoulli sampling process by
+using Gumbel-Softmax as a re-parameterization trick to
+relax the discrete distribution [43], [44].
+
+3.2 Graph Transformer Architecture
+
+Given an input graph G, the node feature x; € R%*! of
+node v; is first projected via a linear transformation to d-
+dimensional hidden vector h?, as:
+
+h) = Woz; + bo, (5)
+where Wo € R2*“ and bo € R® are the learnable parame-
+
+ters, dg is the initial feature dimension of v;.
+
+3.2.1 Structural Self-Attention
+
+Note that traditional graph transformers attention projects
+query and key vectors from each node feature and then
+computes a full dot-product between them, representing the
+
+===== PDF page 6 =====
+Fig. 5: An analysis on degree-weighted matrix D. When two
+nodes v; and v; have low degrees together, they are more
+frequently sampled to generate valuable edges.
+
+attention to which node v; attends to another node v, [4],
+[17]. That is, self-attention is agnostic to learning structural
+similarity and proximity between pairs of nodes, result-
+ing in poor performance in graph structure preservation.
+Therefore, we propose a structural self-attention to capture
+the proximity and structural similarity between node pairs.
+Specifically, the attention score at the /-th layer of the k-th
+head can be formulated as:
+
+er (OM PAL DR at
+
+Dy om p(D,), ©
+
+a;
+
+aj Vda
+Q* [al st] = [Ween + We""st,], (7)
+Kal, sts] = [Wie nh aa (8)
+
+where W2"", W2", WEN" WK and 0 © R&*4 are
+learnable transformation matrices, nt and " are the node
+feature vectors of v; and v; at the /-th layer, respectively,
+s;j denotes the high-order proximity vector between v; and
+v;,and fg (D,;) is the linearly transformed degree-weighted
+score D;; between v; and v;. We use high-order proximity
+sij and degree-weighted score Dj; to reflect community
+membership and roles in communities, respectively. We use
+two separate learnable transformation matrices for node
+feature vectors and high-order proximity vectors, W,,” and
+w "to obtain query and key matrices.
+
+To define the matrix s, we analyze higher-order prox-
+imity between nodes in a multi-scale manner to examine
+whether they are densely connected across k-hops. s;; rep-
+resents the high-order proximity between v; and v; can be
+defined as:
+
+Sy = fs (sim{), sim®, ) . ,sim* ?) ; (9)
+sim’) = N (v;) AN (v5) (10)
+a N®)(v;) UN (vj) ?
+
+where f,(-) represents a learnable linear transformation that
+maps a k-dimensional input vector to a d-dimensional out-
+put vector, N“)(v;) refers to the set of nodes within k-hop
+
+6
+
+distance rooted at node 2, 8;; € R1** denotes the proximity
+score between two nodes v; and v;, and sim) denotes a
+measure of the proximity between two nodes at the k-th
+step. The value of sim quantifies how close two nodes
+are in terms of the shared neighbors between two nodes
+vu; and v; at the k-hop distance. This value captures the
+structural proximity of two nodes based on the number of
+shared neighbors at the k-hop distance. Besides, the number
+of consecutive zeros from the first component of sim,; can
+tell the model about the k-hop distance between v; and v;.
+That is, the number of the first zeros in sim,; indicates
+how many hops are required before there is a transition
+probability between the two nodes.
+
+3.2.2 Graph Transformer Layers
+
+We then aggregate messages from the context nodes using
+the attention scores and concatenate H outputs of the ag-
+gregation on each head into an updated node feature vector,
+followed by a linear projection. The node feature vector ht
+of v; at the /-th layer is then updated as:
+
+H
+At =o}, So avhal |, (11)
+
+k=1 \vjEN(vi)
+where G4’ = softmax;(ai’), V'! € R4*4 indicates the
+
+value matrix, ol, E Raxd is a learnable transformation
+matrix, and || refers to concatenation. We then pass the
+outputs to feed-forward networks (FFN) by adding residual
+connections and layer normalization as:
+
+ht) = LN (al + Alt) ,
+
+alt) = Who (wiht)
+
+(12)
+(13)
+
+where W} € R?4*¢ and W! € R¢*?4 are learnable param-
+eters, o(-) denotes the ReLU function, and LN(-) indicates
+layer normalization.
+
+3.3. Self-Supervised Learning Tasks
+
+We propose an effective Self-Supervised Learning task for
+preserving the global graph structures without using any la-
+bel information. In this way, DegFairGT could learn fair em-
+beddings to preserve the input graph structure, which then
+can be adapted to various downstream tasks. To achieve
+this, DegFairGT explicitly preserves the graph structure as a
+graph reconstruction task by leveraging the p-step transition
+probability matrix. The transition matrix captures higher-
+order structural relationships beyond the adjacent neigh-
+bors, presenting both local and global connectivity, ensuring
+that embeddings preserve local neighborhoods and global
+structural information.
+
+Given the output embeddings from the final transformer
+layer, we aim to reconstruct the k-step transition matrix
+probability of the input graph [32], [45]. Formally, given the
+output embeddings of any two nodes v; and v;, as Z; and
+
+Z;, respectively, we compute the similarity score between
+
+LAA
+them, i.e., cosine similarity, as Zi; = = Tana: In addition,
+
+we note that while the transition probability reconstruction
+ensures that embeddings retain the topological structure,
+node features play a crucial role in many real-world graphs.
+
+===== PDF page 7 =====
+That is, different graph domains, e.g., social networks and
+molecular graphs, also rely on different feature information,
+which can benefit the model in learning fair representa-
+tions. Therefore, in addition to learning graph structure,
+DegFairGT reconstructs the initial node features to enhance
+the adaptability of fair representations. The loss function can
+be defined as:
+
+2 1
+~t all (14)
+
+Vv
+
+Ly = fy > |v _ 3
+Pp
+
+where M‘) is the pre-computed log-scaled p-step transition
+matrix from the input graph with NCE [32], Z* = Z- Z" is
+the cosine similarity matrix calculated from the output node
+representations Z, X and X refer to the initial node features
+and the output node embeddings obtained by learnable
+linear transformation of Z, respectively, and 6, and {2 are
+hyper-parameters. V denotes the set of nodes in the input
+graph.
+
+In the early stages of training, the graph augmentation
+could collapse into insignificant edges and modify graph
+structures in an undesirable way. For example, the aug-
+mentation module could learn to produce a fully connected
+graph or excessively remove edges between adjacent nodes
+that retain no original graph structure. To prevent the struc-
+tural augmentation from collapsing into insignificant edges,
+we use a binary cross entropy (BCE) loss to penalize the
+augmentation, as follows:
+
+N , ,
+Ly =~ 3 [Avjlog(A,;) + (1 ~ Ay) log(1 — 4\,)| (15)
+ij=
+where A is the original adjacency matrix of the input graph,
+and A’ is the adjacency matrix of the augmented graph.
+The total loss functions for the pre-training process are then
+combined as:
+
+L=1,+al,, (16)
+
+where a is the hyper-parameter to control the balance be-
+tween structure preservation and augmentation losses.
+
+4 EVALUATION
+
+To demonstrate DegFairGT’s ability to mitigate degree bias
+problems, we conducted a series of fairness analyses, which
+analyzed the model performance differences between high-
+and low-degree node groups for the node classification
+benchmarks. Also, we compared DegFairGT with the state-
+of-the-art graph transformers and graph augmentation-
+based methods on the node classification task and node
+clustering task to evaluate the overall performance and ca-
+pability of preserving graph structural features, respectively.
+The source code is available in our code repository!.
+
+4.1 Experimental Settings
+4.1.1
+
+We considered six publicly available datasets grouped into
+three domains, including citation networks (Cora, Cite-
+seer, and Pubmed [46]), co-purchase networks (Amazon
+
+Datasets
+
+1. https: / /github.com/NSLab-CUK/Community-aware-Graph-
+Transformer
+
+7
+
+Computers and Photo [5]), and a reference network (Wi-
+kiCS [47]). The detailed datasets are summarized in Table
+1. We conducted each experiment ten times by randomly
+sampling training, validation, and testing sets with sizes of
+60%, 20%, and 20%, respectively. The table results show the
+mean and standard deviation of the metrics on the testing
+set over the ten cases.
+
+4.1.2 Baselines
+
+We compared DegFairGT to the three groups of baselines:
+popular GNN architectures, fairness, and augmentation-
+based methods, as well as graph transformers. Our goal
+is to validate the performance of DegFairGT to address
+the degree bias and graph structure preservation compared
+to recent studies. For baseline settings, we follow closely
+from these studies for fair comparison. For popular GNN
+architectures, we considered two methods, i.e., GIN and
+GAT:
+
+e GIN [27] is an expressive GNN to distinguish be-
+tween non-isomorphic graph structures, which en-
+ables the model to generate well-distinguished rep-
+resentations.
+
+e GAT [28] uses an attention mechanism to capture
+the importance of each neighboring node during
+message-passing aggregation.
+
+For fairness and augmentation-based methods, we consid-
+ered five recent methods:
+
+« GRACE [24] generates multiple views of graphs
+by randomly removing edges and masking node
+features to adjust the edges in graphs. The model
+then uses a contrastive objective to maximize the
+agreement between different views.
+
+e GCA [15] generates informative edges by focusing on
+important structures via an adaptive augmentation
+with a bias on node centrality.
+
+e RGRL [8] randomly generates augmented graphs
+with a bias for low-degree nodes and then employs
+GNNs with contrastive objectives to learn represen-
+tations.
+
+e DegFairGNN [14] aims to modulate the messages at
+each GNN layer to distill or complement information
+for high- and low-degree nodes based on debiasing
+message aggregation.
+
+e« GRADE [7] samples context nodes from substruc-
+tures surrounding each get node to generate infor-
+mative edges with a low-degree node bias.
+
+For graph transformers, we considered seven methods that
+can capture the global graph structures to mitigate the
+degree bias problem:
+
+« GT [4] is a vanilla graph transformer that learns
+the representations via self-attention and employs a
+Laplacian positional encoding as node features.
+
+e SAN [29] aims to adaptively capture the graph struc-
+tures by using a learnable positional encoding.
+
+e SAT [17] extracts k-hop subgraphs to aggregate mes-
+sages for each target node based on GNNs followed
+by graph transformers.
+
+===== PDF page 8 =====
+TABLE 1: A summary of statistics of datasets.
+
+Dataset #Nodes #Edges #Classes Feature Dimension Density (x10~4)
+Cora [46] 2,708 5,429 7 1,433 14.81
+Citeseer [46] 3,327 4,732 6 3,703 8.55
+Pubmed [46] 3,703 44,338 3 500 64.68
+Computers [5] 13,752 245,861 10 767 26.00
+Photo [5] 7,650 119,081 8 745 40.70
+WikiCS [47] 11,701 216,123 10 300 31.57
+
+« ANS_GT [30] construct context nodes by employing
+different sampling strategies, i.e., k-hop neighbor-
+hoods, node features similarity or node centrality, to
+capture the global information for each node.
+
+e Graphormer [12] aims to capture k-hop subgraphs
+surrounding each target node based on the shortest
+path distance and then incorporate the structural
+distance into self-attention.
+
+e NodeFormer [33] aims at message-passing modula-
+tion at each layer, which could adaptively sample
+sufficient messages from neighborhoods.
+
+e UGT [32] introduces the use of structural identity
+to explore nodes with high structural similarity and
+then generates edges connecting non-adjacent nodes.
+
+4.1.3 Evaluation Metrics
+
+To analyze degree bias, we adopt two measurements, De-
+gree Statistical Parity (Asp) and Degree Equal Opportunity
+(Ago) [14], [48]. The two metrics consider whether the
+distribution of predicted labels of each node is consistent
+between node groups of different generalized degrees. For
+the details of the generalized degree, we refer readers to
+[14]. Intuitively, from the test set, we form two node groups
+G, and G2 with low and high generalized degrees within
+r-hop distance, respectively, and compute Agp and Ago.
+Specifically, these metrics assess whether the distribution of
+predicted labels of each node is consistent between node
+groups of different generalized degrees. We then compute
+Agp and Ago as:
+
+1 ~ ~
+Asp = 16] dicec!Pi(ie = 6) — Pale = 4), (17)
+
+1 n ~
+Azo = ic} eee IPi(Ge = ely» = ¢) — Po(Ge = ely» = 0)|,
+(18)
+
+where C 5 c is the set of classes in the testing set, %, and
+Y» denote the predicted and actual classes of node v, respec-
+tively, and P,(-) and P3(-) are the ratios of nodes classified
+into each class in node groups G; and G2, respectively.
+
+We use accuracy to evaluate the performance of the node
+classification task. For the node clustering task, we employ
+the conductance (C) and modularity (Q) to evaluate the
+quality of the clustering results [49].
+
+4.1.4 Model Training and Resources
+
+Detailed hyperparameter specifications are given in Table
+2. We conducted a search on the embedding dimensions
+{32, 64, 128, 256}. The hyperparameters a2, 81, and {2 are
+determined with a grid search among {0.01,0.1,0.5, 1, 10}.
+For the pre-training phase, we train the model for 500
+
+TABLE 2: Hyperparameters used in experiments.
+
+Hyperparameters Values
+Number of Transformer layers 4
+Number of Heads 4
+Number of epochs for pre-training 500
+Number of Clusters 5
+Dropout rate 0.1
+Embedding dimension 64
+Adam: initial learning rate 1x 10-4
+Adam: weight decay 1x 107-°
+Activation function ReLU
+a 1.0
+
+Bi 0.5
+
+Bo 0.5
+
+é 0.8
+
+¢ 0.2
+
+epochs using Adam optimizer with 1 x 10-4 learning rate
+and 1 x 107° weight decay.
+
+We conducted the experiments in two servers, each
+equipped with four NVIDIA RTX A5000 GPUs and 24GB
+RAM/GPU. DegFairGT was built and tested in Python 3.8.8
+using Torch-geometric Library [50] and DGL Library [51].
+The experiments were tested on the Ubuntu 20.04 LTS.
+
+4.2. Fairness Analysis
+
+We first evaluate DegFairGT against the baselines in terms
+of Agp and Ago, with r = 1 and 20% Top/Bottom (i.e.,
+G, and G2 include the top and bottom 20% of nodes in
+terms of the number of one-hop neighborhoods), as shown
+in Table 3. We have the following observations: (i) Deg-
+FairGT consistently outperformed most baselines, e.g., GT,
+UGT, GRADE, and SAN, on both fairness metrics, show-
+ing the effectiveness of structural augmentation and struc-
+tural self-attention. For example, DegFairGT achieved the
+best performance on four datasets: Cora, Citeseer, Pubmed,
+and WikiCS on both Agp and Ago metrics and gained
+second and third ahead of other baselines on Comput-
+ers and Photo dataset. The improvement over the graph
+transformers could be caused by that k-hop neighborhood
+sampling can include noisy edges, and structural similarity
+can effectively refine the sampled context nodes. (ii) Graph
+transformers, e.g., ANS_GT and Graphormer, outperformed
+augmentation-based methods in most datasets regarding
+both fairness metrics. This result indicates that aggregating
+k-hop neighborhoods, which guarantee at least a certain
+degree of proximity to target nodes, can contribute to ad-
+dressing degree bias more than looking over a variety of
+nodes. We assume that random or heuristic augmentation-
+based methods, e.g., RGRL and GCA, can not eliminate
+possibilities enough for generating or leaving noisy edges
+connecting distant nodes with low proximity, which could
+
+===== PDF page 9 =====
+TABLE 3: A fairness analysis on r = 1 and Top/Bottom 20%. The top two are highlighted by first and second.
+
+Cora Citeseer Pubmed Computers Photo WikiCS
+
+Asp Azol Aset Azol Asel Azol Asepl Azol Aspl Azol Aspel Axzol
+GIN 4.77+068 19.82+437 9.554030 19.804+437 7.994072 10.45+127 13.39+102 34.054+601 12.55+081 14.72+221 10.23+035 34.30+268
+GAT 5.204116 12.464143 9.784122 17.21+564 7.204107 12.04+064 5.424118 18.33+4142 8.354087 11.52+207 8.744093 10.96+115
+RGRL 5.834074 13.90+216 8.861089 13.324259 8.734159 13.324110 5.924027 16.02+4218 9.524041 20.534156 8.281034 16.83+227
+GRACE 4.894024 8.901279 8.944096 13.201+099 8.574055 11.62+026 6.244024 13.10+085 9.684010 14.57+027 10.34+083 17.33 4145
+GCA 4.514009 10.39+083 8.754047 14.574270 8.174034 14.254234 5.874025 16.07+106 9.59+016 22.61+018 8.294067 17.06+252
+DegFairGNN 4.01066 14.864282 13.854280 18.791499 6.241047 7.204013 5.76006 15.814152 10.394012 18.764114 9.014185 18.76+255
+GRADE 4.754086 12.674205 8.744154 14494248 8.234124 13.854214 6.064172 11.334193 12.704277 12.864216 8.764202 10.62+196
+GT 5.864100 14.134151 8.344199 16.31+023 5.124041 6.154106 5.69+003 16.40+281 9.254076 10.59+267 7.944015 12.96+3.24
+SAN 4.90+082 10.00+040 10.80+160 17.44+303 4.094175 8.30+092 5.434070 17.48+4419 9.244001 13.684118 7.734028 16.23+107
+SAT 4.764052 14.9 7.134181 14.66+121 4.574090 7.544197 5.97+058 20.264175 8.944180 15.44+127 8.834176
+ANS_GT 4.17+069 13.71i193 6.464131 13.274135 4.464097 14.41i085 4.90+085 12.034143 8.744038 12.51i212 8.234035
+Graphormer 4.364022 12.30+169 6.824064 13.404151 5.324044 7.881081 5.964156 12.174120 8.964024 11.264177 8.07+023
+NodeFormer 4.384042 7.824172 9.394176 1415428 5.524121 11.40+152 5.884047 12.50+196 12.60+228 14.49+209 9.014162 10.39+188
+UGT 4.324012 10.54425 8.824030 15.571458 5.204014 7.114062 8.674008 16.22+091 9.414025 14314039 9.414025 14.311039
+DegFairGT  3.46+097 4.26+021 5.934170 11.80+381 3.29+080 6.041052 4.99+061 12.154+081 8.26+018 11.13+305 6.41+039 9.30+119
+
+TABLE 4: A fairness analysis of DegFairGT and the baselines on r = 2 and Top/Bottom 20%.
+
+Cora Citeseer Pubmed Computers Photo WikiCS
+
+Aspt Agzol Asepl Awol Aspl Azol Aspl Awol Aspl Awol Asrel Axzol
+GIN 10.144172 34.454272 15.214141 31.014112 10.204131 8.234417 17.114035 30.834491 17.89+106 27.624+476 13.10+068 41.07+288
+GAT 10.364059 23.86+528 15.854130 25.364515 15.214147 22.76+166 10.994153 14.034249 15.19+072 17.194490 10.68+058 11.09+094
+RGRL 9.194091 21.77+305 15.404138 19.264270 16.754133 22.604123 11.39+023 18.26+285 14.45+040 24114260 10.19+040 19.28+263
+GRACE 9.204008 17.714418 15.254083 18.52+409 11.621026 16.77+085 9.784181 13.10+085 15.73+039 19.474141 11.46+068 18.80+146
+GCA 9.484073 20.45+716 15.484049 16.01+055 18.434107 23.1314076 12.44+006 13.31+012 15.71+014 25.834070 11.26+034 19.70+309
+DegFairGNN 9.644072 19.874+237 15.164251 16.254473 13.87+076 17.76+057 12.33+010 12.63+089 16.80+016 29.40+190 10.16+205 18.66+7.22
+GRADE 11.564133 17.684342 14.984339 20.86.4247 14.36.4224 24.744444 8.964201 15.11i369 13.554431 14.181302 14.221292 17.464323
+GT 9.724137 18.19+287 13.474235 17.29+397 10.81+130 11.72+250 10.58+038 12.81+137 15.87+080 11.61+237 10.13+027 12.23+296
+SAN 10.30+129 15.554144 16.681096 20.01+563 12.244201 15.564127 10.27+036 12.83+208 16.18+001 19.764138 9.874056
+SAT 9Al+o77 16574114 10.454092 13.174199 11.554125 12.354165 9.524073 13.29+069 15.84+097 12.79+182 10.22+046
+ANS_GT 13.18+119 17.654234 10.134137 14054191 11.39+058 15.844104 8.184119 14.65+134 14.8941 15.774+217 9.344199 11.
+Graphormer 9.744055 13.21+170 9.274121 12.47+224 11.534103 14.20+223 10.764173 17.45+352 13.96+108 11.264177 10.32+034 19.72+275
+NodeFormer 10.15+169 19.47+227 10.254219 14.38+381 10.88+4157 13.374304 11.394203 11464112 12.38+247 10.454191 8.764217 9.044265
+UGT 9.164079 18.78+283 10434234 20.69+239 22.534314 25.811240 11.10+018 7.16+036 15.52+018 20.814221 10.53+4014 6.41+0.09
+DegFairGT 8.714042 8.72+073 8.864049 7.544147 10.35+048 8.514117 5.18+054 5.07+085 13.45+147 7.434067 9.084101 8.48+093
+
+hinder learning accurate representations. To this end, the
+superior performance of DegFairGT compared to baselines
+demonstrates that considering both node proximity and
+structural similarity enables our augmentation and self-
+attention to address degree bias by capturing correlated
+nodes.
+
+4.2.1 Fairness according to Neighborhood Ranges
+
+The lack of messages of low-degree nodes becomes more
+severe if their neighbors also do not have enough neigh-
+bors. To evaluate the model fairness under the more severe
+imbalance, we performed experiments for the imbalance of
+two-hop neighborhoods (r = 2), as shown in Table 4. (i)
+DegFairGT outperformed the baselines in terms of both
+degree fairness metrics in most cases of r = 2, as with
+r = 1. DegFairGT performed significantly better than the
+baselines in Cora and Citeseer, which are sparse graphs with
+the density of 14.81 x 10-4 and 8.55 x 1074, respectively.
+Also, DegFairGT exhibited better Ago in r = 2 than 1.
+Specifically, in r = 1, DegFairGT had smaller Asp than
+Ago, but they were similar in r = 2. Although the more
+severe imbalance worsened both biases in model prediction
+and accuracy, the accuracy biases of DegFairGT caught
+
+up with the prediction biases in every dataset while still
+Asp < Azo in the baselines. This result underpins that
+community structures are useful for discovering correlated
+nodes under the severe lack of messages. (ii) DegFairGT
+and other graph transformers, e.g., GT, SAN, SAT, and UGT,
+exhibited better performance in terms of Ago in r = 2
+than 1, mostly worse regarding Asp. However, their perfor-
+mance improvements were focused on Computers, Photo,
+and WikiCS with the density of 26.00 x 10~4, 40.70 x 10~4,
+and 31.57 x 10~4, respectively, which are more dense than
+the others. This implies that in non-sparse graphs when
+enough neighbors are reachable in k-hops, node proximity is
+effective for detecting correlated nodes. We can also assume
+that selecting neighbors satisfying both node proximity and
+structural similarity makes DegFairGT effectively alleviate
+degree bias on both sparse and non-sparse graphs.
+
+4.2.2 Fairness Analysis onr = 1 and Top/Bottom 30%
+
+We further evaluate degree fairness by extending G, and
+G to the top and bottom 30% nodes, as shown in Table 5.
+This experiment aims to validate whether DegFairGT is also
+effective for nodes with less severe shortages or overabun-
+dances of messages. We have the following observations: (i)
+
+===== PDF page 10 =====
+TABLE 5: A fairness analysis on r = 1 and Top/Bottom 30%.
+
+10
+
+Cora Citeseer Pubmed Computers Photo WikiCS
+Asep+ Anzol Ase) Azol Asel Avot Asp) Azol Ase) Awol Asrel Azot
+GIN 4.284080 7.021023 4.71+053 7.934095 3.984003 7.11+024 11.56+080 33.851085 8.154063 24.80+266 8.154156 30.19+495
+GAT 4.714053 7.934095 10.38+295 19.86+394 6.80+085 11.60+314 4.714118 12.384205 7.104119 13.23+321 6.70+133 9.26+278
+RGRL 3.524023 7.644159 7.794087 12.714207 4.554112 9.024080 4.981073 9.994254 6.194028 13.734123 6.514030 14.254190
+GRACE 4.321040 9474239 7.384143 10.614123 3.614035 7.244045 5.064010 11.0940: 7.424023 11.38+026 9.094055 15.57+067
+GCA 3.624012 9.154099 7.194055 12.73+080 3.064005 7.86+008 4.974012 17.374017 7.424038 16.91+396 13.27+021 18.664138
+DegFairGNN 3.48+016 6.691043 8.694028 11.434073 3.9140m 6.504100 5.324016 10.35110 7.934019 13.184195 8.224078 14.63.4110
+GRADE 4.434114 12.234296 7.394083 16.99+194 3.484086 6.584184 11.364135 10.154143 11.774189 9.664196 8.114139 9.714165
+GT 4.714038 10.76+178 8.76+135 13.51+201 3.72+098 6.324171 4.924071 11.194+26 6.664043 10.85+118 6.884079 11.99+181
+SAN 4.764091 14.324181 5.64+044 10.57+058 4.2440 8.874177 4.384052 12.934018 7.31087 13.00+251 7.06+066 14.44+265
+SAT 4.37+073 17.59+085 7.33+018 16.14+229 4.78404 6.22+148 4.57+030 19.344262 6.774026 12.56+209 7.01+043 15.30-+1.87
+ANS_GT 4.114115 12.72+198 6.424141 13.064212 4.434023 7.184125 4.224105 9.814167 6.464105 11.004371 6.374191 15.8413.24
+Graphormer 4.364022 12.304169 7.854153 9.984236 7.80+052 10.034126 5.241099 9.544189 6.664149 6.824115 6.974182 12.90+4276
+NodeFormer 4.324118 13.79+165 6.684144 11.834265 3.744168 6.564143 4.194125 8.281186 7.284113 15.741398 9.494118 9.654299
+UGT 4.34400 11.614118 11.11+007 15.66+048 7.374079 13.57+009 4.474002 3.871010 6.914022 8.094134 6.254001 7.95099
+DegFairGT 3.38030 5.96+078 6.21+081 7.42+003 3.254017 6.044017 3.59038 8.821068 6.59+042 6.05+027 6.24+047 9.094081
+TABLE 6: The performance on node classification.
+
+Cora Citeseer Pubmed Computers Photo WikiCS
+
+GIN 77.25+335 64.09+195 85.96 +057 66.59 +0.16 88.924136 76.53+0.82
+
+GAT 84.214147 73.43412 82.43.4047 90.06+0.76 93.344073  77.554071
+
+RGRL 84.274087 71.77+089 = 82.50+0.17 84.8340.43 92.14402  79,.22+049
+
+GRACE 83.09+08  69.28+029 85,.14+024 88.12+019 92.214010 30.52+054
+
+GCA 83.434034  68.20+02  85.65102 74.87+0.11 91.284058  32.344007
+
+DegFairGNN = 85.654152 67.112272 83.81.4031 74.80 +032 90.37+055 65.91 +093
+
+GRADE 85.67+092 74.21+088 83.90 +127 87.17+0.64 93.49+060  82.91+083
+
+GT 84.324101 72514165 87.77 +0.60 90.53 +253 95.18+066  84.05+033
+
+SAN 83.654132  72.12+189 81.04+099 90.30+1.06 95.084048 81.044081
+
+SAT 79.13+073 66.52+0.60 87.78 +059 92.744051  80.04+076
+
+ANS_GT 86.8541.34 74.87 41.53 88.5141.74 94.29 41.24 81.1942.62
+
+NodeFormer 86.744099 = 72.20+0.79 87.07+153 93.214271 65.47+236
+
+UGT 87.784185 76.24+092 90.18 41.42 88.254128 84.12+058
+
+DegFairGT 87.10+153  76.59+098 91.45+0.58 95.73+081  84.61+053
+
+DegFairGT outperformed most baselines, as with the 20%
+case, and exhibited better performance in 30% than 20%
+excluding Ago in Cora and Asp in Citeseer. The decre-
+ment on Cora and Citeseer could come from that extending
+observation ranges for nodes without a severe shortage of
+messages can cause the noisy signal problem, considering
+that DegFairGT significantly outperformed the baselines
+on Cora and Citeseer in the previous experiments. This
+was also observed in other graph transformers, e.g., SAT,
+Graphormer, and UGT. (ii) Augmentation-based methods
+generally exhibited better performance in 30% and bigger
+performance improvements from 20% to 30% than graph
+transformers in Cora, Citeseer, and Pubmed, and it was the
+opposite in Computers, Photo, and WikiCS. Similar to the
+previous experiment, this result underpins the effectiveness
+of structural similarity and node proximity in sparse and
+non-sparse graphs, respectively.
+
+4.3 Performance Analysis
+
+4.3.1 Node Classification
+
+Table 6 shows the node classification performance of Deg-
+FairGT and the baselines. We have the following observa-
+
+tions: (i) DegFairGT consistently outperformed graph trans-
+formers, e.g., GI and SAN, which employ k-hop neighbor-
+
+hood sampling regardless of structural similarity. This indi-
+cates that our approach to refining context nodes with both
+perspectives is effective for aggregating informative mes-
+sages and avoiding noisy ones for overall nodes, not only
+nodes with low or high degrees. (ii) DegFairGT also out-
+performed augmentation-based methods, e.g., RGRL and
+GRADE, exhibiting the power of our learnable augmenta-
+tion compared to random or heuristic ones. This indicates
+that node proximity is significant in node classification
+to aggregate features from homophilic nodes. Random or
+heuristic augmentation cannot easily reflect node proximity
+since it can generate arbitrary edges.
+
+4.3.2 Trade-off between Fairness and Accuracy
+
+We note that there often exists a trade-off between fairness
+and node classification accuracy [52], [53]. Figure 6 presents
+the Pareto front curves constructed by searching hyper-
+parameters for each model to compare the trade-off of
+DegFairGT with the baselines. The upper-left corner area
+defines the ideal performance with high accuracy and low
+degree-related bias. We observed that the trade-offs between
+Agp and accuracy are less significant in DegFairGT than
+in the other models. DegFairGNN, which uses heuristic
+augmentation considering node degrees, showed the most
+severe trade-off, and GT and SAN, which employ k-hop
+
+===== PDF page 11 =====
+1
+
+TABLE 7: The performance on node clustering in terms of Conductance (C) and Modularity (Q).
+
+Cora Citeseer Pubmed Computers Photo WikiCS
+cl Qt cl Qt cl Qt cl Qt cl Qt cl Qt
+GIN 22.734150 59524193 23.95+4329 55.35+338 13.25+081 49.01+093 39.01+142 59.57+119 32.69+581 62.53+669 37.87+392 60.48+3.90
+GAT 16.05+045 67.29+035 21.94+083 58.17+069 10.74+045 53.21+076 20.68+240 77.41+208 15.33+042 81.15+017 31.78+139 66.38+206
+RGRL 12.734144 63.92+496 5.664037 68.41+320 12.71i168 56.364+539 12.064128 87.76+177 17.57+362 76.80+538 22.62+142 77471241
+GRACE 22.22+006 47.80+007 5.00+004 71.26+004 14.13+001 48.45+003 13.56+050 85.09+056 9.321000 85.37+000 51.97+033 48.10+115
+GCA 11.76+205 61.26+264 13.524172 57.534150 20.80+007 42.234009 13.69+147 86.21+208 21.734563 72.20+793 38.951605 60.594555
+DegFairGNN 20.17+104 44.784126 25.874081 43.314170 17.62+105 47.59+053 11.87+038 87.234196 11.99+102 86.06+102 30.081090 70.47+227
+GT 17.77+081 65.07+083 23.50+091 56.69+101 19.16+099 44.90+085 26.53+677 72.77+768 17.11+027 78.47+017 34.19+357 64.62+4.18
+SAN 22.88+263 60.814245 24.48+195 56.01+177 14.89+120 49.72+108 30.61+609 67.36+6.00 73.86+263 30.22+188 67.95+2.79
+SAT 28.25+4247 54.09+300 34.82+291 45.31+608 21.57+197 43.041+221 20.644515 79.07+595 4 71.85+818 32.71+381 66.96+4.01
+NodeFormer 15.04+236 66.92+123 14.82+286 65.17+115 14.94+051 47.89+265 18.52+0.63 80.60+043 78.10+016 27.07+148 56.88-+0.43
+UGT 10.28+071 66.23+042 5.224091 67.18+028 19.70+567 61.40-+189 21.834386 77.89+4.25 79.00+024 27.834127 72.534144
+DegFairGT 9.84207 69.28+032 5.404121 68.19+039 7.664152 89.51+419 10.134130 88.07+132 85.39+258 21.68+082 76.71+131
+- - TABLE 8: Ablation study on the presence of the graph
+—— DegFairGT —— DegFairGNN —— GT —— SAN . .
+augmentation (Aug) and self-attention (Att) modules.
+__ 90 Cora 100 Computers 100 Photo x AWN < < =<
+
+Ras 90] ee 95 “Y ug etrics ‘ora omputers oto
+
+G LO 90 wa _ Ace.t 84.814178 90.07+082 94.234145
+
+g 80 Lf 80 ? 85 _ Aspl 5.884109 5.964022 9.33096
+
+735 a0 55 70 /%0 12141618 °° 9 ai 43 yp Acct 8554107 89.0106 9508-108
+
+Asp Asp Asp Asp\| 4854125 5.45+021  8.67+086
+
+. . Ace.t 84.95.4119 90.38041 95.46+0.23
+
+Fig. 6: The trade-off between Accuracy and Asp in Deg- y Asp 3.53088 5.9 1t087 “B.14t06s
+
+FairGT, DegFairGNN, GT, and SAN models on three ‘Acet 8710.19 9145i0m 95.73.00
+
+datasets, e.g., Cora, Computers, and Photo. The upper left VY Aspl 3464097 4.994061  8.26-Lo18
+
+corner holds high accuracy and low Agp.
+
+neighborhoods sampling, were between DegFairGNN and
+DegFairGT. The severe trade-off of DegFairGNN underpins
+that although augmentation considering only structural
+similarity can alleviate degree bias, we can meet difficulties
+in discovering homophilic nodes for node classification if
+we lose node proximity due to uncontrolled edge per-
+turbation. The graph transformers show the effectiveness
+of broader observation ranges based on node proximity,
+but DegFairGT exhibits that node proximity and structural
+similarity can be synergetic in discovering correlated nodes.
+
+4.3.3 Node Clustering
+
+Despite the effectiveness of our structural augmentation,
+the edge perturbation modifies structures of input graphs
+and could hinder graph structure preservation. Therefore,
+we conducted experiments on the node clustering task, as
+shown in Table 7. (i) DegFairGT outperformed the baselines
+in most cases, exhibiting the effectiveness of our struc-
+ture preservation tasks. Especially, DegFairGT, UGT, and
+augmentation-based models, which employ pre-training
+tasks using contrastive objectives for preserving node con-
+nectivity or transition probabilities, showed good perfor-
+mance. We assume that DegFairGT outperformed the others
+since DegFairGT samples nodes satisfying both node prox-
+imity and structural similarity in an end-to-end trainable
+manner. (ii) Contrary, most GNNs and graph transformers
+without structure preservation tasks, e.g., GIN, GT, SAN,
+and SAT, faced difficulties in recovering community struc-
+tures. This implies that only aggregating node features is
+
+insufficient to preserve graph structure, especially with a
+global view.
+
+4.4 Model Analysis
+4.4.1. Ablation Analysis
+
+We conducted experiments to validate how much our struc-
+tural augmentation and structural self-attention modules
+contribute to overall model performance, as shown in Ta-
+ble 8. (i) The cases only with the structural augmentation
+and only with the structural self-attention exhibited similar
+performance on Cora and Computers. This result verifies
+that sampling nodes in the same community with similar
+roles by using our augmentation module can provide infor-
+mative messages. (ii) DegFairGT with both modules exhib-
+ited the best performance in most datasets and metrics. This
+implies that the augmentation and self-attention modules
+that have the same objectives can complement each other.
+
+4.4.2 Sensitivity Analysis
+
+We further investigated the impact of edge sampling on
+three datasets, ie., Cora, Computers, and Photo, in terms
+of accuracy, Asp, and Ago, as shown in Table 9. The
+hyperparameters € and ¢ are determined with a grid search
+among {0.2,0.4,0.6,0.8}. We observed that DegFairGT has
+a better performance (higher accuracy and lower Asp and
+Azo) with the ¢ = 0.2 and € = 0.8. That is, if ¢ = 0.2
+is large, our structural augmentation can generate noisy
+edges that could not preserve the original graph structures.
+We argue that the structural augmentation could not only
+
+===== PDF page 12 =====
+12
+
+TABLE 9: An analysis of the hyper-parameters € and ¢.
+
+é ¢ Cora Computers Photo
+Acct Asp) Arol Acct Asp) Azol Acct Aspl Azrol
+0.2 82.32 5.42 7.92 88.75 9.69 15.33 88.70 10.55 14.60
+02 04 85.61 4.83 8.01 89.33 9.06 15.37 90.47 10.12 15.48
+. 0.6 84.84 5.78 9.39 85.81 9.74 16.26 88.65 10.64 15.02
+0.8 83.89 4.48 11.76 84.01 8.19 16.63 87.51 11.41 18.95
+0.2 82.58 5.56 6.72 84.04 8.82 13.25 88.19 9.40 18.95
+04 04 8499 4.03 7.98 84.65 10.79 15.88 81.43 10.26 17.41
+. 0.6 85.95 5.30 11.26 86.33 9.11 14.42 87.38 11.26 16.65
+0.8 84.13 7.48 10.07 85.96 8.68 13.61 87.25 12.61 15.76
+0.2 84.09 5.80 10.43 82.61 5.97 14.61 86.66 10.37 10.95
+06 04 85.02 4.07 8.25 84.64 5.66 13.69 87.90 9.61 11.28
+. 0.6 86.01 4.94 8.60 87.90 6.92 17.41 93.59 9.67 12.62
+0.8 85.35 4.10 9.94 84.31 7.22 16.33 89.67 10.53 10.78
+0.2 87.10 3.46 4.26 91.45 4.48 13.04 95.73 8.62 11.13
+08 04 86.54 4.07 5.10 90.30 4.65 12.36 95.69 9.12 10.65
+. 0.6 83.54 3.87 4.56 88.53 5.11 13.17 94.78 8.54 12.66
+0.8 84.17 4.39 6.89 86.21 5.78 13.16 94.53 9.05 13.52
+eeanrnes Sensitivity analysis the Aholce of lustering hep eo Accuracy (Acc.)
+algorithm in terms of Accuracy (Acc.), Asp, and Ago. Cora 90 Computers 9 Photo 98
+x 1] ] s
+Methods Metrics Cora Computers Photo 7 l l G pet 1/92 20 I I ] | ] 96S
+wy
+ea -
+Acct 84.3942.14 86.95-£1.34 92,811.21 ds PR 80's 8 10 es
+w/o clustering Asp| 6.2140.82 6.1240.29 12.4141.05 $& 4 “Te 2
+Agol 7.344+1.22  16.7040.86 18.47+0.95 3 T3879 70 0 a ) 80 0 a 2) 90
+Normalized Acc} 86.63+1.51 91.45+0.59 94.14+0.64 k k k
+. beet Asp| 448+0.66 4.9740.56 9.25-£0.91 . stave
+spectral clustering Apol 4984117 14554124 14534073 (a) On the numbers of clusters (/).
+Acc.f 87.10+1.53 90.38+1.03 95.7340.84 <x FE AN A
+K-mean clustering Asp| 3.464097 4994064 8.2640.18 SP €0 curacy (Acc.)
+Agol 4.2640.24 12.15£0.84 11.1343.05 ~ “T 90 Computers 5 Photo 98
+S7 I I 11 lif 20 ss
+S701 li] ] 16 hi 88 [ya 6g
+ds 80 12 10 94;
+generate informative edges but also retain the original graph S 8 84 2g
+structures. a, jo glee" Ie0 0 90
+As the model performance depends on the choice of 123 a e78 123 a e78 123 oO 678
+clustering algorithms, we investigated how the choice of b) On th fpsten t iti
+clustering algorithms affects the performance of DegFairGT (b) On the range of p-step transition.
+in terms of (Acc.), Asp, and Ago, as shown in Table
+10. We note that spectral clustering captures community — fe feo Accuracy (Acc.)
+structures based on connectivity, ensuring that structurally __» Cora 90 18-—Computers _ 44 9, __Photo _gg
+ae : S _
+similar nodes are grouped together, while K-means cluster- =? pill jfes ,, = Ia as | | pes
+ing groups nodes based on feature similarity. We observed ae Ngee ft 80 | | ~beny 94.
+that while normalized spectral clustering can enhance ac- é 3 75 8 err 88 10 ke 2"; og
+curacy and fairness effectively, our model with K-means <1? 70 0 85 5 90
+0010105 i 10 0.010105 i 10 0.010105 i 10
+
+clustering achieved a better balance on three metrics. This
+is because feature similarity is crucial for capturing relation-
+ships among non-adjacent nodes, particularly in the context
+of nodes with similar degrees. We argue that degree-based
+fairness adjustments in DegFairGT can benefit from cluster-
+ing methods that prioritize node feature similarities rather
+than graph connectivity, which aligns with the homophily
+principle, and similar nodes tend to share common features,
+even if they are not directly connected. By clustering nodes
+based on feature similarity, K-means better captures mean-
+ingful relationships between non-adjacent nodes in the same
+community.
+
+For the choice of the number of clusters, Figure 7 (a)
+illustrates the sensitivity analysis on the number of clusters
+M. We observed that the model performance remains rela-
+
+a a a
+
+(c) On the range of a.
+
+Fig. 7: Sensitivity analysis on (a) the number of clusters, (b)
+the range of p-step transition preservation, and (c) the range
+of a in terms of Agp, Ago, and accuracy on three datasets,
+e.g., Cora, Computers, and Photo.
+
+tively stable over the M > 3. This implies that the model
+can capture the structural similarity well in the global view
+to generate informative edges. Therefore, we select M = 5
+as the number of clusters in all the experiments.
+
+Figure 7 (b) presents the performance of DegFairGT ac-
+
+===== PDF page 13 =====
+TABLE 11: The computational complexity with Big-O nota-
+tion.
+
+Model Computational Complexity
+RGRL Oprojection(N)+ Oencoder (KN)
+GRACE Oprojection(N)+ Ocencoder(N?)
+
+GT Opg(mE)+ Ocncoder(N*)
+SAT Opg(ME)+ Ocncoder; (N*)+ Ocncoder (N?)
+
+DegFairGT = Opre(NE)+ Ovias(N) + Ocncoder(N*)
+
+cording to hyper-parameters p-step transition. (i) p controls
+the task for p-step transition probability preservation, and
+DegFairGT achieved the best fairness at p = 4 to 5 on Cora
+and at p = 3 to 4 on Computers and Photo. This implies
+that larger p values allow the model to incorporate global
+neighborhood information, leading to better fairness repre-
+sentations. Thus, we can assume that DegFairGT requires a
+higher p on a more sparse graph to capture global graph
+structures. However, when p is large enough, the global
+information expands too broadly, which can hurt the model
+in capturing the local structures.
+
+To validate the contribution of the hyperparameter a in
+Equation 16, we further tuned the hyperparameter a, as
+shown in Figure 7 (c). Specifically, we tuned the hyperpa-
+rameter a among {0.01,0.1,0.5,1,10}, following the work
+[8]. We observed that our proposed model performed well
+when a = 1.0, the same as the parameter for L,. This implies
+that both loss functions are equally weighted in guiding
+the model’s learning process to generate fairness represen-
+tations. That is, the model does not excessively change the
+input graph under our augmentation while preserving the
+global graph structure with the reconstruction loss.
+
+4.4.3 Complexity Analysis
+
+Table 11 presents the computational costs of DegFairGT
+and several baselines. Oprojection(-), Opx(-), ANd Ocncoder(-)
+refer to the cost of the projection, positional encoding, and
+graph encoder. m, K, and E present the positional encoding
+dimension, the number of positive samples for contrastive
+learning, and the number of edges. Opre(-) and Opias(-)
+are the cost of extracting k-hop neighborhoods and pre-
+computing D and s matrices. The cost of transformer layers
+of DegFairGT is O(N”), similar to other graph transformers,
+such as GT [4], while the cost of SAT [17] is O(N*) to
+aggregate k-subgraphs rooted in each node. GRACE [24]
+and RGRL [8] use GNN encoders with lower computational
+costs than graph transformers. In summary, the cost of
+DegFairGT is lower than SAT and slightly higher than GT
+due to injecting s into the self-attention with O(N7).
+
+We note that regarding scalability, the computational
+complexity of DegFairGT is Oencoder(N 2) due to the self-
+attention mechanism used in the graph transformer encoder.
+This means that as the number of nodes in the graph
+increases, the computational cost rises quadratically, making
+it infeasible for extremely large graphs. To address this issue,
+several techniques, e.g., graph partition or sparse attention
+[54], could be explored to improve efficiency without com-
+promising performance, which we leave as future work.
+
+13
+
+5 CONCLUSION AND FUTURE WORKS
+
+This paper proposed a novel degree fairness Graph Trans-
+former, DegFairGT, to address the degree bias of message-
+passing GNNs via learnable structural augmentation and
+self-attention. Instead of randomly sampling node pairs
+to make edges, we discovered nodes with high structural
+similarity, ie., nodes with similar roles in the same com-
+munity, likely to be sampled to generate edges under our
+learnable structural augmentation. By doing so, the model
+could not only mitigate the degree bias but also preserve
+the graph structure under our structural self-attention. The
+experiments on various benchmark datasets demonstrate
+the superiority of our proposed model, showing that our
+framework could achieve degree fairness, classification ac-
+curacy, and structure preservation simultaneously.
+
+There are several limitations in our work. First, the main
+limitation of DegFairGT is its computational inefficiency, as
+it inherits the quadratic complexity of self-attention, leading
+to O(N?) complexity, where N is the number of nodes. This
+quadratic scaling becomes computationally expensive for
+large graphs, requiring significant memory and processing
+power. Second, we focus solely on the roles of nodes (node
+degree) and their communities to identify structural simi-
+larity between node pairs. However, there exist other forms
+of structural similarity, such as semantic subgraph-level
+similarity, which also play a crucial role in capturing node
+pair relationships. By discovering the high-order structures,
+the model could better capture diverse forms of structural
+similarity beyond node degree and community membership
+
+To address the above limitations, future research could
+explore the following directions: (1) To address computa-
+tional complexity, we suggest that future research focus on
+enhancing self-attention mechanisms’ computational com-
+plexity. Several recent studies have leveraged improvements
+in developing linear transformers, which offer linear scala-
+bility in computational complexity [54], [55]. The follow-up
+study will aim to improve the computational efficiency and
+time complexity of self-attention mechanisms by leveraging
+linear self-attention techniques. (2) There exist other forms
+of structural similarity, such as semantic subgraph-level
+similarity, which also play a crucial role in capturing node
+pair relationships. Discovering semantic subgraph-level re-
+lationships would enhance the model’s ability to capture
+more high-order structural relationships between nodes. By
+identifying and leveraging shared substructures, e.g., mo-
+tifs, the model could better represent complex dependencies
+that are not captured by degree and community alone.
+
+ACKNOWLEDGMENTS
+
+This work was supported in part by the National Re-
+search Foundation of Korea (NRF) grant funded by the
+Korea government (MSIT) (No. 2022R1F1A1065516 and No.
+2022K1A3A1A79089461) (O.-J.L.) and in part by the R&D
+project “Development of a Next-Generation Data Assimila-
+tion System by the Korea Institute of Atmospheric Predic-
+tion System (KIAPS)”, funded by the Korea Meteorological
+Administration (KMA2020-02211) (H.-J J.).
+
+===== PDF page 14 =====
+REFERENCES
+
+[1] Ming Li, Alessio Micheli, Yu Guang Wang, Shirui Pan, Pietro Lio,
+Giorgio Stefano Gnecco, and Marcello Sanguineti, “Guest editorial:
+Deep neural networks for graphs: Theory, models, algorithms, and
+applications,” IEEE Trans. Neu. Net. Learn. Sys., 2024, vol. 35, no. 4,
+pp. 4367-4372.
+
+[2] Xianfeng Tang, Huaxiu Yao, Yiwei Sun, Yiqi Wang, Jiliang Tang,
+Charu Aggarwal, Prasenjit Mitra, and Suhang Wang, “Investigat-
+ing and mitigating degree-related biases in graph convoltuional
+networks,” in Proc. Int. Conf. Infor. Knowl. Management, 2020, pp.
+1435-1444.
+
+[3] Rui Huang and Ping Li, “Hub-hub connections matter: Improving
+edge dropout to relieve over-smoothing in graph neural networks,”
+Knowl. Sys., 2023, vol. 270, Art. no. 110556.
+
+[4] Vijay Prakash Dwivedi and Xavier Bresson, “A generalization of
+transformer networks to graphs,” 2020, arXiv:2012.09699.
+
+[5] Julian J. McAuley, Christopher Targett, Qinfeng Shi, and Anton
+van den Hengel, “Image-based recommendations on styles and
+substitutes,” in Proc. Int. Conf. Res. Dev. Infor. Retrieval, 2015, pp.
+43-52.
+
+[6] Peng Ji, Jiachen Ye, Yu Mu, Wei Lin, Yang Tian, Chittaranjan Hens,
+MatjaZ Perc, Yang Tang, Jie Sun, and Jiirgen Kurths, “Signal
+propagation in complex networks,” Phys. Rep., 2023, vol. 1017, pp.
+1-96.
+
+[7] Ruijia Wang, Xiao Wang, Chuan Shi, and Le Song, Uncovering the
+structural fairness in graph contrastive learning,” in Proc. Int. Conf.
+Neural Inf. Process. Syst., 2022, no. 2352, pp. 32465-32473.
+
+[8] Namkyeong Lee, Dongmin Hyun, Junseok Lee, and Chanyoung
+Park, “Relational self-supervised learning on graphs,” in Proc. Int.
+Conf. Infor. Knowl. Management, 2022, pp. 1054-1063.
+
+[9] Oriol Artime, Marco Grassia, Manlio De Domenico, James P Glee-
+son, Hernén A Makse, Giuseppe Mangioni, MatjaZ Perc, and Fil-
+ippo Radicchi, ’Robustness and resilience of complex networks,”
+Nat. Rev. Phy., 2024, vol. 6, pp. 114-131.
+
+[10] Peng Ji, Jan Nagler, Matjaz Perc, Michael Small, and Jinghua Xiao,
+Focus on the disruption of networks and system dynamics,” Chaos:
+Int. J. Non. Science, 2024, vol. 34, Art. no. 080401.
+
+[11] Sami Abu-El-Haija, Bryan Perozzi, Amol Kapoor, Nazanin
+Alipourfard, Kristina Lerman, Hrayr Harutyunyan, Greg Ver Steeg,
+and Aram Galstyan, “Mixhop: Higher-order graph convolutional
+architectures via sparsified neighborhood mixing,” in Proc. Int.
+Conf. Mach. Learning, 2019, pp. 21-29.
+
+[12] Chengxuan Ying, Tianle Cai, Shengjie Luo, Shuxin Zheng, Guolin
+Ke, Di He, Yanming Shen, and Tie-Yan Liu, ”Do transformers really
+perform badly for graph representation?,” in Proc. Int. Conf. Neural
+Inf. Process. Syst., 2021, pp. 28877-28888.
+
+[13] Van Thuy Hoang, Hyeon-Ju Jeon, Eun-Soon You, Yoewon Yoon,
+Sungyeop Jung, and O-Joun Lee. “Graph representation learning
+and its applications: A survey,” Sensors, 2023, vol. 23, no. 8, pp.
+4168.
+
+[14] Zemin Liu, Trung-Kien Nguyen, and Yuan Fang, “On generalized
+degree fairness in graph neural networks,” in Proc. AAAI Conf. Art.
+Intell., 2023, pp. 4525-4533.
+
+[15] Yangiao Zhu, Yichen Xu, Feng Yu, Qiang Liu, Shu Wu, and Liang
+Wang, "Graph contrastive learning with adaptive augmentation,”
+in Proc. Web Conf., 2021, pp. 2069-2080.
+
+[16] Van Thuy Hoang and O-Joun Lee, ”Pre-training graph neural
+networks on molecules by using subgraph-conditioned graph in-
+formation bottleneck,” 2024, arXiv:2412.15589.
+
+[17] Dexiong Chen, Leslie O’Bray, and Karsten M. Borgwardt,
+“Structure-aware transformer for graph representation learning,”
+in Proc. Int. Conf. Mach. Learning, 2022, pp. 3469-3489.
+
+[18] Wei Zhuo and Guang Tan, “Proximity enhanced graph neural
+networks with channel contrast,” in Proc. Inter. Joint Conf. Art. Intell.,
+2022, pp. 2448-2455.
+
+[19] Hongbin Pei, Bingzhe Wei, Kevin Chen-Chuan Chang, Yu Lei, and
+Bo Yang, “Geom-gcn: Geometric graph convolutional networks,” in
+Proc. Int. Conf. on Learn. Representations, 2020.
+
+[20] Lu Bai, Lixin Cui, Yue Wang, Ming Li, Jing Li, Philip S Yu, and
+Edwin R Hancock, “Haqjsk: Hierarchical-aligned quantum jensen-
+shannon kernels for graph classification,” [EEE Trans. Knowl. Data
+Engineering, 2024, vol. 36, no. 11, pp. 6370-6384.
+
+[21] Yuning You, Tianlong Chen, Yongduo Sui, Ting Chen, Zhangyang
+Wang, and Yang Shen, “Graph contrastive learning with augmen-
+tations,” in Proc. Int. Conf. Neural Inf. Process. Syst, 2020, no. 488, pp.
+5812-5823.
+
+14
+
+[22] O-Joun Lee, Hyeon-Ju Jeon, and Jason J. Jung, “Learning multi-
+resolution representations of research patterns in bibliographic
+networks,” J. Infor., 2021, vol. 15, no. 1, pp. 101126-101147.
+
+[23] Van Thuy Hoang, Thanh Sang Nguyen, Sangmyeong Lee, Jooho
+Lee, Luong Vuong Nguyen, and O-Joun Lee, “Companion ani-
+mal disease diagnostics based on literal-aware medical knowledge
+graph representation learning,” IEEE Access, 2023, vol. 11, pp.
+114238-114249.
+
+[24] Yanqiao Zhu, Yichen Xu, Feng Yu, Qiang Liu, Shu Wu, and Liang
+Wang, Deep Graph Contrastive Representation Learning,” in Proc.
+ICML Work. Graph Rep. Learn. Bey., 2020.
+
+[25] O-Joun Lee and Jason J. Jung, “Story embedding: Learning
+distributed representations of stories based on character networks
+(extended abstract),” in Proc. Int. Joint Conf. Art. Intell., 2020, pp.
+5070-5074.
+
+[26] Hyeon-Ju Jeon, Min-Woo Choi, and O-Joun Lee, “Day-ahead
+hourly solar irradiance forecasting based on multi-attributed
+spatio-temporal graph convolutional network,” Sensors, vol. 22,
+no. 19, pp. 7179.
+
+[27] Keyulu Xu, Weihua Hu, Jure Leskovec, and Stefanie Jegelka,
+”How powerful are graph neural networks?,” in Proc. Int. Conf.
+on Learn. Representations, 2019.
+
+[28] Petar Velickovic, Guillem Cucurull, Arantxa Casanova, Adriana
+Romero, Pietro Lid, and Yoshua Bengio, “Graph attention net-
+works,” 2017, arXiv:1710.10903.
+
+[29] Devin Kreuzer, Dominique Beaini, William L. Hamilton, Vincent
+Létourneau, and Prudencio Tossou, “Rethinking graph transform-
+ers with spectral attention,” in Proc. Int. Conf. Neural Inf. Process.
+Syst., 2021, pp. 21618-21629.
+
+[30] Zaixi Zhang, Qi Liu, Qingyong Hu, and Chee-Kong Lee, “Hier-
+archical graph transformer with adaptive node sampling,” in Proc.
+Int. Conf. Neural Inf. Process. Syst., 2022.
+
+[31] Junyou Zhu, Chao Gao, Ze Yin, Xianghua Li, and Jiirgen Kurths,
+“Propagation structure-aware graph transformer for robust and
+interpretable fake news detection,” in Proc. ACM SIGKDD Conf.
+Knowl. Discov. Data Mining, 2024, pp. 4652-4663.
+
+[32] Van Thuy Hoang and O-Joun Lee, “Transitivity-preserving graph
+representation learning for bridging local connectivity and role-
+based similarity,” in Proc. AAAI Conf. Art. Intell., 2024.
+
+[33] Qitian Wu, Wentao Zhao, Zenan Li, David P. Wipf, and Junchi Yan,
+’Nodeformer: A scalable graph structure learning transformer for
+node classification,” in Proc. Int. Conf. Neural Inf. Process. Syst., 2022.
+
+[34] Ming Li, Siwei Zhou, Yuting Chen, Changgin Huang, and Yun-
+liang Jiang, “Educross: Dual adversarial bipartite hypergraph learn-
+ing for cross-modal retrieval in multimodal educational slides,”
+Infor. Fusion, 2024, vol. 109, Art. no. 102428.
+
+[35] Chao Gao, Junyou Zhu, Fan Zhang, Zhen Wang, and Xuelong
+Li, ”A novel representation learning for dynamic graphs based on
+graph convolutional networks,” IEEE Trans. Cyber., 2022, vol. 53,
+no. 6, pp. 3599-3612.
+
+[36] Sadamori Kojaku, Jisung Yoon, Isabel Constantino, and Yong-Yeol
+Ahn, “Residual2vec: Debiasing graph embedding with random
+graphs,” in Proc. Int. Conf. Neural Inf. Process. Syst., 2021, pp. 24150-
+24163.
+
+[37] Zemin Liu, Trung-Kien Nguyen, and Yuan Fang, “Tail-gnn: Tail-
+node graph neural networks,” in Proc. ACM SIGKDD Conf. Knowl.
+Discov. Data Mining, 2021, pp. 1109-1119.
+
+[38] Tong Zhao, Yozen Liu, Leonardo Neves, Oliver J. Woodford,
+Meng Jiang, and Neil Shah, “Data augmentation for graph neural
+networks,” in Proc. AAAI Conf. Art. Intell., 2021, pp. 11015-11023.
+
+[39] Wei Jin, Yao Ma, Xiaorui Liu, Xianfeng Tang, Suhang Wang, and
+Jiliang Tang, “Graph structure learning for robust graph neural
+networks,” in Proc. ACM SIGKDD Conf. Knowl. Discov. Data Mining,
+2020, pp. 66-74.
+
+[40] Jian Kang, Yan Zhu, Yinglong Xia, Jiebo Luo, and Hanghang
+Tong, “Rawlsgen: Towards rawlsian difference principle on graph
+convolutional network,” in Proc. Web Conf., 2022, pp. 1214-1225.
+
+[41] Namkyeong Lee, Junseok Lee, and Chanyoung Park,
+”“Augmentation-free self-supervised learning on graphs,” in
+Proc. AAAI Conf. Art. Intell., 2022, pp. 7372-7380.
+
+[42] Yue Liu, Ke Liang, Jun Xia, Sihang Zhou, Xihong Yang, Xinwang
+Liu, and Stan Z. Li, “Dink-net: Neural clustering on large graphs,”
+in Proc. Int. Conf. Mach. Learning, 2023, vol. 202, pp. 21794-21812.
+
+[43] Eric Jang, Shixiang Gu, and Ben Poole. “Categorical reparam-
+eterization with gumbel-softmax,” in Proc. Int. Conf. on Learn.
+Representations, 2017.
+
+===== PDF page 15 =====
+[44] Chris J. Maddison, Andriy Mnih, and Yee Whye Teh, “The
+concrete distribution: A continuous relaxation of discrete random
+variables,” in Proc. Int. Conf. Learn. Representations, 2017.
+
+[45] Michael Gutmann and Aapo Hyvarinen, “Noise-contrastive es-
+timation of unnormalized statistical models, with applications to
+natural image statistics,” J. Mach. Learn. Research, 2012, vol. 13, pp.
+307-361.
+
+[46] Prithviraj Sen, Galileo Namata, Mustafa Bilgic, Lise Getoor, Brian
+Gallagher, and Tina Eliassi-Rad, “Collective classification in net-
+work data,” AI Mag., 2018, vol. 29, no. 3, pp. 93-106.
+
+[47] Péter Mernyei and Catalina Cangea, ’Wiki-cs: A wikipedia-based
+benchmark for graph neural networks,” 2020, arXiv:2007.02901.
+[48] David Madras, Elliot Creager, Toniann Pitassi, and Richard S.
+Zemel, “Learning adversarially fair and transferable representa-
+tions,” in Proc. Int. Conf. Mach. Learn., 2018, vol. 80, pp. 3381-3390.
+
+[49] Jaewon Yang and Jure Leskovec, ”Defining and evaluating net-
+work communities based on ground-truth,” Knowl. Inf. Syst., 2015,
+vol. 42, no. 1, pp. 181-213.
+
+[50] Matthias Fey and Jan Eric Lenssen, “Fast graph representation
+learning with pytorch geometric,” 2019, arXiv:1903.02428.
+
+[51] Minjie Wang, Da Zheng, Zihao Ye, Quan Gan, Mufei Li, Xiang
+Song, Jinjing Zhou, Chao Ma, Lingfan Yu, Yu Gai, Tianjun Xiao,
+Tong He, George Karypis, Jinyang Li, and Zheng Zhang, “Deep
+graph library: A graph-centric, highly-performant package for
+graph neural networks,” 2019, arXiv:1909.01315.
+
+[52] Avishek Joey Bose and William L. Hamilton, “Compositional
+fairness constraints for graph embeddings,” in Proc. Int. Conf. Mac.
+Learn., 2019, vol. 97, pp. 715-724.
+
+[53] Enyan Dai and Suhang Wang, “Say no to the discrimination:
+Learning fair graph neural networks with limited sensitive attribute
+information,” in Proc. Int. Conf. Web Sea. Data Min., 2021, pp. 680-
+688.
+
+[54] Zhen Qin, Weixuan Sun, Hui Deng, Dongxu Li, Yunshen Wei,
+Baohong Ly, Junjie Yan, Lingpeng Kong, and Yiran Zhong, “cos-
+former: Rethinking softmax in attention,” in Proc. Int. Conf. Learn.
+Representations, 2022.
+
+[55] Yi Tay, Mostafa Dehghani, Dara Bahri, and Donald Metzler, “Ef-
+ficient transformers: A survey,” ACM Comp. Surveys, 2023, vol. 55,
+no. 109, pp. 1-28.
+
+15

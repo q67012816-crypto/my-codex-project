@@ -1,0 +1,10 @@
+{
+  "original_edge_sim_raw_max_by_step": [
+    0.666700005531311,
+    1.0,
+    1.0
+  ],
+  "original_edge_phi_all_zero": true,
+  "load_dgl": "max-normalizes original edge sim columns",
+  "dgl_renew": "indexes raw global sim without max-normalization"
+}

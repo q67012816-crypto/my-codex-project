@@ -1,0 +1,155 @@
+{
+  "status": "completed",
+  "completed_candidates": 16,
+  "required_candidates": 16,
+  "elapsed_seconds": 3133.458651370005,
+  "failures": {},
+  "deferred": [],
+  "candidates": [
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.2-zeta-0.2",
+      "seed": 100,
+      "xi": 0.2,
+      "zeta": 0.2,
+      "best_validation_accuracy": 0.7855822443962097,
+      "best_validation_epoch": 167,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.2-zeta-0.4",
+      "seed": 100,
+      "xi": 0.2,
+      "zeta": 0.4,
+      "best_validation_accuracy": 0.7597042322158813,
+      "best_validation_epoch": 194,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.2-zeta-0.6",
+      "seed": 100,
+      "xi": 0.2,
+      "zeta": 0.6,
+      "best_validation_accuracy": 0.831792950630188,
+      "best_validation_epoch": 188,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.2-zeta-0.8",
+      "seed": 100,
+      "xi": 0.2,
+      "zeta": 0.8,
+      "best_validation_accuracy": 0.7911275625228882,
+      "best_validation_epoch": 179,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.4-zeta-0.2",
+      "seed": 100,
+      "xi": 0.4,
+      "zeta": 0.2,
+      "best_validation_accuracy": 0.831792950630188,
+      "best_validation_epoch": 194,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.4-zeta-0.4",
+      "seed": 100,
+      "xi": 0.4,
+      "zeta": 0.4,
+      "best_validation_accuracy": 0.8521257042884827,
+      "best_validation_epoch": 172,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.4-zeta-0.6",
+      "seed": 100,
+      "xi": 0.4,
+      "zeta": 0.6,
+      "best_validation_accuracy": 0.8502772450447083,
+      "best_validation_epoch": 158,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.4-zeta-0.8",
+      "seed": 100,
+      "xi": 0.4,
+      "zeta": 0.8,
+      "best_validation_accuracy": 0.831792950630188,
+      "best_validation_epoch": 150,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.6-zeta-0.2",
+      "seed": 100,
+      "xi": 0.6,
+      "zeta": 0.2,
+      "best_validation_accuracy": 0.8595194220542908,
+      "best_validation_epoch": 178,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.6-zeta-0.4",
+      "seed": 100,
+      "xi": 0.6,
+      "zeta": 0.4,
+      "best_validation_accuracy": 0.8502772450447083,
+      "best_validation_epoch": 183,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.6-zeta-0.6",
+      "seed": 100,
+      "xi": 0.6,
+      "zeta": 0.6,
+      "best_validation_accuracy": 0.8428835272789001,
+      "best_validation_epoch": 176,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.6-zeta-0.8",
+      "seed": 100,
+      "xi": 0.6,
+      "zeta": 0.8,
+      "best_validation_accuracy": 0.8410351276397705,
+      "best_validation_epoch": 146,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.8-zeta-0.2",
+      "seed": 100,
+      "xi": 0.8,
+      "zeta": 0.2,
+      "best_validation_accuracy": 0.8502772450447083,
+      "best_validation_epoch": 180,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.8-zeta-0.4",
+      "seed": 100,
+      "xi": 0.8,
+      "zeta": 0.4,
+      "best_validation_accuracy": 0.8502772450447083,
+      "best_validation_epoch": 157,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.8-zeta-0.6",
+      "seed": 100,
+      "xi": 0.8,
+      "zeta": 0.6,
+      "best_validation_accuracy": 0.8465803861618042,
+      "best_validation_epoch": 157,
+      "cache_key": "e8093fc5d33410b2"
+    },
+    {
+      "output": "/workspace/my-codex-project/reproduction/runs/cora-validation-grid-seed-100/xi-0.8-zeta-0.8",
+      "seed": 100,
+      "xi": 0.8,
+      "zeta": 0.8,
+      "best_validation_accuracy": 0.8465803861618042,
+      "best_validation_epoch": 157,
+      "cache_key": "e8093fc5d33410b2"
+    }
+  ],
+  "test_evaluated": true
+}

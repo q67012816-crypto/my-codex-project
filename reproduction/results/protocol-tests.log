@@ -1,0 +1,12 @@
+test_actual_architecture_and_probability_coefficients (test_protocol.ProtocolTests) ... ok
+test_empty_groups_fail_explicitly (test_protocol.ProtocolTests) ... ok
+test_groups_are_selected_only_from_test_candidates (test_protocol.ProtocolTests) ... ok
+test_multiclass_macro_frequency_gap (test_protocol.ProtocolTests) ... ok
+test_paper_loss_values_and_gradients (test_protocol.ProtocolTests) ... ok
+test_parity_is_not_accuracy_difference (test_protocol.ProtocolTests) ... ok
+test_ties_rounding_and_no_overlap (test_protocol.ProtocolTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.039s
+
+OK

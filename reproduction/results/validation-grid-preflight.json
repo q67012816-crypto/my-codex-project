@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "scope": "Existing seed42 2/3-epoch fixture only; actual seed100 grid test remains unread.",
+  "reference_history_and_selected_weights_exactly_match_prior_smoke": true,
+  "changed_coefficients_propagation_verified": true,
+  "candidates_produce_no_test_metrics": true,
+  "restored_rng_inference_predictions_exactly_match_prior_smoke": true,
+  "grid_driver_sha256": "c6efbb6964836bee3db8795cc03872cfa60c4e0915783b38a4eefc4acf00c924",
+  "training_runner_sha256": "9007f9b61a92c6aa78122f38bee7aff4f00ff4ccaa23fd7f40502cd277051141"
+}

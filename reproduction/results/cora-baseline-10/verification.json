@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "scope": "full",
+  "verified_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "independently_recomputed_metrics": true,
+  "distinct_splits": 10,
+  "valid_histories_and_checkpoints": true
+}

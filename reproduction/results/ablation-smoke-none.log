@@ -1,0 +1,32 @@
+loading dgl...
+networkx: number edges: 10556
+loading dgl, done, DGL graph edges: 10556
+{
+  "effective_config": {
+    "layers": 4,
+    "heads": 4,
+    "clusters": 5,
+    "dropout": 0.1,
+    "hidden_dim": 64,
+    "lr": 0.0001,
+    "weight_decay": 1e-05,
+    "alpha": 1.0,
+    "beta1": 0.5,
+    "beta2": 0.5,
+    "xi": 0.8,
+    "zeta": 0.2,
+    "transition_steps": 3
+  },
+  "actual_layers": 4
+}
+{"phase": "pretrain", "epoch": 1, "loss": 6552523.0, "transition": 13105046.0, "feature": 0.28128841519355774, "augmentation": 0.0, "augmentation_has_gradient": false}
+Traceback (most recent call last):
+  File "/workspace/my-codex-project/reproduction/train_ablation.py", line 200, in <module>
+    main()
+  File "/workspace/my-codex-project/reproduction/train_ablation.py", line 119, in main
+    loss.backward()
+  File "/workspace/venvs/cgt/lib/python3.10/site-packages/torch/_tensor.py", line 487, in backward
+    torch.autograd.backward(
+  File "/workspace/venvs/cgt/lib/python3.10/site-packages/torch/autograd/__init__.py", line 200, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+RuntimeError: Trying to backward through the graph a second time (or directly access saved tensors after they have already been freed). Saved intermediate values of the graph are freed when you call .backward() or autograd.grad(). Specify retain_graph=True if you need to backward through the graph a second time or if you need to access saved tensors after calling backward.

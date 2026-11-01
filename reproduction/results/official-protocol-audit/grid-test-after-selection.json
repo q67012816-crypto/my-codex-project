@@ -1,0 +1,30 @@
+{
+  "evaluation_utc": "2026-11-01T03:47:06.879527+00:00",
+  "selection_file_sha256": "0bbea0c1cd0facd0bc46608845a1c1e2c1f18ea2c94809d7075dc914227856a8",
+  "selection_preceded_test": true,
+  "results": {
+    "selected": {
+      "xi": 0.6,
+      "zeta": 0.2,
+      "seed": 100,
+      "test_nodes": 541,
+      "correct": 453,
+      "accuracy_percent": 83.73382624768946,
+      "delta_sp_percent": 3.9682539682539675,
+      "validation_accuracy": 0.8595194220542908,
+      "best_validation_epoch": 178
+    },
+    "reference": {
+      "xi": 0.8,
+      "zeta": 0.2,
+      "seed": 100,
+      "test_nodes": 541,
+      "correct": 433,
+      "accuracy_percent": 80.0369685767098,
+      "delta_sp_percent": 3.439153439153438,
+      "validation_accuracy": 0.8502772450447083,
+      "best_validation_epoch": 180
+    }
+  },
+  "scope": "One Cora split only; a bounded coefficient diagnostic, not ten-run reproduction or evidence of author selection bias."
+}

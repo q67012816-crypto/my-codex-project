@@ -1,0 +1,34 @@
+{
+  "cache_key": "e8093fc5d33410b2",
+  "verified_records": true,
+  "community": {
+    "clusters": 5,
+    "cluster_sizes": [
+      1348,
+      384,
+      516,
+      1,
+      459
+    ],
+    "existing_edge_same_community_fraction": 0.5073891625615764,
+    "B_mean_existing_same": 0.0,
+    "B_mean_existing_cross": 0.0,
+    "B_nonzero_fraction": 0.0031314841522138027,
+    "B_nonzero_existing_edges": 0,
+    "B_cross_community_nonzeros": 0,
+    "B_within_community_nonzeros": 22964,
+    "candidate_new_edges": 11482
+  },
+  "candidates": {
+    "paper_within3_same_community_nonadjacent_pairs": 68063,
+    "after_extra_hard_degree_gap_at_most1": 24731,
+    "after_exact3_walk_requirement": 23423,
+    "actual_B_candidate_pairs": 11482,
+    "within3_degree_filtered_pairs_missed_by_exact3": 1308,
+    "degree1_nodes": 485,
+    "same_community_degree1_pairs_at_distance2": 75,
+    "such_leaf_pairs_present_in_B": 0,
+    "degree1_nodes_without_B_candidates": 246,
+    "degree1_nodes_without_within3_degree_filtered_candidates": 209
+  }
+}

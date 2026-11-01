@@ -1,0 +1,32 @@
+Using CPython 3.10.22 interpreter at: venvs/cgt/bin/python
+Resolved 2 packages in 130ms
+   Building torch-scatter==2.1.1
+   Building torch-sparse==0.6.17
+error: Failed to build `torch-scatter==2.1.1`
+  cause: The build backend returned an error
+  cause: Call to `setuptools.build_meta:__legacy__.build_wheel` failed (exit status: 1)
+
+         [stderr]
+         Traceback (most recent call last):
+           File "<string>", line 11, in <module>
+           File "/workspace/venvs/cgt/lib/python3.10/site-packages/setuptools/build_meta.py", line 438, in build_wheel
+             return _build(['bdist_wheel'])
+           File "/workspace/venvs/cgt/lib/python3.10/site-packages/setuptools/build_meta.py", line 429, in _build
+             return self._build_with_temp_dir(
+           File "/workspace/venvs/cgt/lib/python3.10/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+             self.run_setup()
+           File "/workspace/venvs/cgt/lib/python3.10/site-packages/setuptools/build_meta.py", line 520, in run_setup
+             super().run_setup(setup_script=setup_script)
+           File "/workspace/venvs/cgt/lib/python3.10/site-packages/setuptools/build_meta.py", line 317, in run_setup
+             exec(code, locals())  # noqa: S102 # exec is intentional here
+           File "<string>", line 11, in <module>
+           File "/workspace/venvs/cgt/lib/python3.10/site-packages/torch/utils/cpp_extension.py", line 25, in <module>
+             from pkg_resources import packaging  # type: ignore[attr-defined]
+         ModuleNotFoundError: No module named 'pkg_resources'
+
+hint: This error likely indicates that `torch-scatter@2.1.1` depends on `pkg_resources`, but doesn't declare it as a build dependency. If `torch-scatter` is a first-party package, consider adding `pkg_resources` to its `build-system.requires`. Otherwise, either add it to your `pyproject.toml` under:
+
+[tool.uv.extra-build-dependencies]
+torch-scatter = ["pkg_resources"]
+
+or `uv pip install pkg_resources` into the environment and re-run with `--no-build-isolation`.

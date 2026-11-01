@@ -1,0 +1,10 @@
+{
+  "command": "python exp.py --dataset cora",
+  "return_code": 1,
+  "timed_out": false,
+  "elapsed_seconds": 2.0721547189968987,
+  "original_source_unchanged": true,
+  "status": "failed_before_valid_performance_result",
+  "accuracy": null,
+  "interpretation": "A startup/environment error is not an 84% result and cannot establish paper reproducibility."
+}

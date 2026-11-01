@@ -1,0 +1,128 @@
+loading dgl...
+networkx: number edges: 10556
+loading dgl, done, DGL graph edges: 10556
+{
+  "effective_config": {
+    "layers": 4,
+    "heads": 4,
+    "clusters": 5,
+    "dropout": 0.1,
+    "hidden_dim": 64,
+    "lr": 0.0001,
+    "weight_decay": 1e-05,
+    "alpha": 1.0,
+    "beta1": 0.5,
+    "beta2": 0.5,
+    "xi": 0.8,
+    "zeta": 0.2,
+    "transition_steps": 3
+  },
+  "actual_layers": 4
+}
+{"phase": "pretrain", "epoch": 1, "loss": 6521229.5, "transition": 12341659.0, "feature": 0.2818687856197357, "augmentation": 350400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 2, "loss": 6110172.0, "transition": 11493144.0, "feature": 0.2759292423725128, "augmentation": 363600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 3, "loss": 5672260.0, "transition": 10642520.0, "feature": 0.2709280252456665, "augmentation": 351000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 4, "loss": 5290971.0, "transition": 9834342.0, "feature": 0.26666754484176636, "augmentation": 373800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 5, "loss": 4886142.0, "transition": 9047084.0, "feature": 0.26298579573631287, "augmentation": 362600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 6, "loss": 4459332.75, "transition": 8183465.0, "feature": 0.26039421558380127, "augmentation": 367600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 7, "loss": 4116872.25, "transition": 7474144.0, "feature": 0.2583426237106323, "augmentation": 379800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 8, "loss": 3769740.75, "transition": 6816281.0, "feature": 0.2569521367549896, "augmentation": 361600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 9, "loss": 3452740.5, "transition": 6187480.5, "feature": 0.25619029998779297, "augmentation": 359000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 10, "loss": 3190319.0, "transition": 5632637.5, "feature": 0.25599658489227295, "augmentation": 374000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 11, "loss": 2939526.25, "transition": 5168652.0, "feature": 0.2558600604534149, "augmentation": 355200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 12, "loss": 2762125.25, "transition": 4771450.0, "feature": 0.25614190101623535, "augmentation": 376400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 13, "loss": 2590872.5, "transition": 4457344.5, "feature": 0.25629743933677673, "augmentation": 362200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 14, "loss": 2450733.5, "transition": 4186266.75, "feature": 0.2570878863334656, "augmentation": 357600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 15, "loss": 2349793.25, "transition": 3972386.25, "feature": 0.257521390914917, "augmentation": 363600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 16, "loss": 2249264.125, "transition": 3805728.0, "feature": 0.25816452503204346, "augmentation": 346400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 17, "loss": 2216684.5, "transition": 3682968.75, "feature": 0.2581106126308441, "augmentation": 375200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 18, "loss": 2169154.875, "transition": 3583109.5, "feature": 0.25858640670776367, "augmentation": 377600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 19, "loss": 2118302.125, "transition": 3508204.0, "feature": 0.2586806118488312, "augmentation": 364200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 20, "loss": 2090824.0, "transition": 3449247.75, "feature": 0.25843343138694763, "augmentation": 366200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 21, "loss": 2044964.625, "transition": 3405129.0, "feature": 0.25842854380607605, "augmentation": 342400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 22, "loss": 2052342.5, "transition": 3375884.75, "feature": 0.25790485739707947, "augmentation": 364400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 23, "loss": 2036892.25, "transition": 3351384.25, "feature": 0.2575031816959381, "augmentation": 361200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 24, "loss": 2021498.875, "transition": 3331397.5, "feature": 0.2570202946662903, "augmentation": 355800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 25, "loss": 2019477.75, "transition": 3323755.25, "feature": 0.25626784563064575, "augmentation": 357600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 26, "loss": 2002555.625, "transition": 3308711.0, "feature": 0.2559112012386322, "augmentation": 348200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 27, "loss": 2029827.625, "transition": 3306855.0, "feature": 0.25484010577201843, "augmentation": 376400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 28, "loss": 2013449.25, "transition": 3298898.25, "feature": 0.25401848554611206, "augmentation": 364000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 29, "loss": 2021634.875, "transition": 3296069.5, "feature": 0.25305402278900146, "augmentation": 373600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 30, "loss": 2005653.375, "transition": 3292106.5, "feature": 0.25215816497802734, "augmentation": 359600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 31, "loss": 2009592.25, "transition": 3290784.25, "feature": 0.25110745429992676, "augmentation": 364200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 32, "loss": 2016628.25, "transition": 3286456.25, "feature": 0.2500686049461365, "augmentation": 373400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 33, "loss": 2004470.125, "transition": 3284140.0, "feature": 0.24889473617076874, "augmentation": 362400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 34, "loss": 2005941.25, "transition": 3281482.25, "feature": 0.2477206289768219, "augmentation": 365200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 35, "loss": 2001871.875, "transition": 3282943.5, "feature": 0.2464812994003296, "augmentation": 360400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 36, "loss": 1999110.375, "transition": 3282620.5, "feature": 0.2455483376979828, "augmentation": 357800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 37, "loss": 2005555.25, "transition": 3277510.25, "feature": 0.2442351132631302, "augmentation": 366800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 38, "loss": 1988962.875, "transition": 3274325.5, "feature": 0.24309532344341278, "augmentation": 351800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 39, "loss": 2002972.625, "transition": 3273545.0, "feature": 0.24182423949241638, "augmentation": 366200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 40, "loss": 1986655.25, "transition": 3268510.25, "feature": 0.24077652394771576, "augmentation": 352400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 41, "loss": 1988884.625, "transition": 3266969.0, "feature": 0.23945750296115875, "augmentation": 355400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 42, "loss": 1993768.625, "transition": 3265537.0, "feature": 0.23822051286697388, "augmentation": 361000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 43, "loss": 1994409.75, "transition": 3261219.25, "feature": 0.23716622591018677, "augmentation": 363800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 44, "loss": 1989306.25, "transition": 3259812.25, "feature": 0.23588433861732483, "augmentation": 359400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 45, "loss": 1994987.75, "transition": 3259975.25, "feature": 0.23431168496608734, "augmentation": 365000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 46, "loss": 1990660.125, "transition": 3254520.0, "feature": 0.23328441381454468, "augmentation": 363400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 47, "loss": 1992787.0, "transition": 3253173.75, "feature": 0.23219874501228333, "augmentation": 366200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 48, "loss": 1980744.625, "transition": 3252289.0, "feature": 0.23089277744293213, "augmentation": 354600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 49, "loss": 2007148.875, "transition": 3247497.5, "feature": 0.2299087792634964, "augmentation": 383400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 50, "loss": 1976482.375, "transition": 3246564.5, "feature": 0.2284846305847168, "augmentation": 353200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 51, "loss": 1981955.375, "transition": 3244310.5, "feature": 0.2272404283285141, "augmentation": 359800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 52, "loss": 1974976.625, "transition": 3241153.0, "feature": 0.22622457146644592, "augmentation": 354400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 53, "loss": 1988892.625, "transition": 3239785.0, "feature": 0.224943608045578, "augmentation": 369000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 54, "loss": 1977046.125, "transition": 3236892.0, "feature": 0.22356487810611725, "augmentation": 358600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 55, "loss": 1984310.625, "transition": 3235021.0, "feature": 0.22257758677005768, "augmentation": 366800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 56, "loss": 1989044.5, "transition": 3235688.75, "feature": 0.22125588357448578, "augmentation": 371200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 57, "loss": 1986541.125, "transition": 3230282.0, "feature": 0.22004230320453644, "augmentation": 371400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 58, "loss": 1983214.5, "transition": 3226828.75, "feature": 0.21892260015010834, "augmentation": 369800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 59, "loss": 1980759.875, "transition": 3222719.5, "feature": 0.2178657352924347, "augmentation": 369400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 60, "loss": 1990317.875, "transition": 3225435.5, "feature": 0.2165667563676834, "augmentation": 377600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 61, "loss": 1972822.375, "transition": 3225244.5, "feature": 0.2153906375169754, "augmentation": 360200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 62, "loss": 1982302.125, "transition": 3217804.0, "feature": 0.21439974009990692, "augmentation": 373400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 63, "loss": 1973593.375, "transition": 3213986.5, "feature": 0.2132074534893036, "augmentation": 366600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 64, "loss": 1973453.875, "transition": 3215307.5, "feature": 0.21215669810771942, "augmentation": 365800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 65, "loss": 1982082.875, "transition": 3211365.5, "feature": 0.21096989512443542, "augmentation": 376400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 66, "loss": 1981834.75, "transition": 3210469.25, "feature": 0.20980492234230042, "augmentation": 376600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 67, "loss": 1968992.875, "transition": 3208785.5, "feature": 0.20872388780117035, "augmentation": 364600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 68, "loss": 1958063.875, "transition": 3204127.5, "feature": 0.20765595138072968, "augmentation": 356000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 69, "loss": 1976279.25, "transition": 3205758.25, "feature": 0.20650185644626617, "augmentation": 373400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 70, "loss": 1973078.625, "transition": 3203757.0, "feature": 0.20550349354743958, "augmentation": 371200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 71, "loss": 1986643.625, "transition": 3201687.0, "feature": 0.20431967079639435, "augmentation": 385800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 72, "loss": 1970271.875, "transition": 3197343.5, "feature": 0.20322658121585846, "augmentation": 371600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 73, "loss": 1978978.375, "transition": 3194756.5, "feature": 0.20218580961227417, "augmentation": 381600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 74, "loss": 1948536.125, "transition": 3192272.0, "feature": 0.20112578570842743, "augmentation": 352400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 75, "loss": 1957679.625, "transition": 3191359.0, "feature": 0.20005463063716888, "augmentation": 362000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 76, "loss": 1969604.375, "transition": 3189608.5, "feature": 0.19907742738723755, "augmentation": 374800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 77, "loss": 1939622.25, "transition": 3185244.25, "feature": 0.19789204001426697, "augmentation": 347000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 78, "loss": 1943441.875, "transition": 3184083.5, "feature": 0.19709941744804382, "augmentation": 351400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 79, "loss": 1968949.375, "transition": 3181498.5, "feature": 0.1958855539560318, "augmentation": 378200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 80, "loss": 1972117.75, "transition": 3182235.25, "feature": 0.19477835297584534, "augmentation": 381000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 81, "loss": 1957232.625, "transition": 3180465.0, "feature": 0.19386857748031616, "augmentation": 367000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 82, "loss": 1945095.75, "transition": 3177791.25, "feature": 0.19292888045310974, "augmentation": 356200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 83, "loss": 1948679.625, "transition": 3177759.0, "feature": 0.19184494018554688, "augmentation": 359800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 84, "loss": 1949321.375, "transition": 3171042.5, "feature": 0.19077681005001068, "augmentation": 363800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 85, "loss": 1940116.125, "transition": 3174232.0, "feature": 0.18973205983638763, "augmentation": 353000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 86, "loss": 1955682.0, "transition": 3169763.75, "feature": 0.18895570933818817, "augmentation": 370800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 87, "loss": 1954721.75, "transition": 3169043.25, "feature": 0.1879190355539322, "augmentation": 370200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 88, "loss": 1937129.875, "transition": 3167459.5, "feature": 0.18692439794540405, "augmentation": 353400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 89, "loss": 1948666.25, "transition": 3163332.25, "feature": 0.1859956830739975, "augmentation": 367000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 90, "loss": 1958097.125, "transition": 3164194.0, "feature": 0.18499864637851715, "augmentation": 376000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 91, "loss": 1941299.875, "transition": 3159399.5, "feature": 0.1841198354959488, "augmentation": 361600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 92, "loss": 1952379.125, "transition": 3158758.0, "feature": 0.18312011659145355, "augmentation": 373000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 93, "loss": 1940884.625, "transition": 3154969.0, "feature": 0.18221600353717804, "augmentation": 363400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 94, "loss": 1942025.75, "transition": 3154451.25, "feature": 0.18130922317504883, "augmentation": 364800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 95, "loss": 1948701.875, "transition": 3155803.5, "feature": 0.18023517727851868, "augmentation": 370800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 96, "loss": 1960448.125, "transition": 3155296.0, "feature": 0.1793382465839386, "augmentation": 382800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 97, "loss": 1928592.875, "transition": 3148385.5, "feature": 0.17837578058242798, "augmentation": 354400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 98, "loss": 1932979.5, "transition": 3147958.75, "feature": 0.17752854526042938, "augmentation": 359000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 99, "loss": 1945001.5, "transition": 3148802.75, "feature": 0.17672021687030792, "augmentation": 370600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 100, "loss": 1954299.125, "transition": 3144198.0, "feature": 0.17590296268463135, "augmentation": 382200.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 101, "loss": 1941826.125, "transition": 3141652.0, "feature": 0.17491896450519562, "augmentation": 371000.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 102, "loss": 1934802.375, "transition": 3138804.5, "feature": 0.17409402132034302, "augmentation": 365400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 103, "loss": 1950722.375, "transition": 3140244.5, "feature": 0.17325258255004883, "augmentation": 380600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 104, "loss": 1914070.875, "transition": 3135341.5, "feature": 0.17217710614204407, "augmentation": 346400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 105, "loss": 1930311.125, "transition": 3135422.0, "feature": 0.17139697074890137, "augmentation": 362600.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 106, "loss": 1930661.875, "transition": 3131723.5, "feature": 0.17057007551193237, "augmentation": 364800.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 107, "loss": 1930056.875, "transition": 3130113.5, "feature": 0.16962450742721558, "augmentation": 365000.0, "augmentation_has_gradient": false}

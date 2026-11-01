@@ -1,0 +1,662 @@
+{
+  "status": "completed",
+  "completed_pairs": 30,
+  "target_pairs": 30,
+  "completed_new_jobs": 40,
+  "required_new_jobs": 40,
+  "elapsed_seconds": 144.7282110619999,
+  "failures": {},
+  "deferred": [],
+  "paired": {
+    "accuracy_points": {
+      "mean_difference": -1.4171287738755372,
+      "std_sample": 3.222236462006834,
+      "confidence_interval": [
+        -2.620331642874597,
+        -0.21392590487647745
+      ],
+      "n": 30
+    },
+    "delta_sp_x100_points": {
+      "mean_difference": 0.5555555555555552,
+      "std_sample": 1.0242453979811337,
+      "confidence_interval": [
+        0.17309603840315757,
+        0.9380150727079529
+      ],
+      "n": 30
+    }
+  },
+  "pairs": [
+    {
+      "seed": 42,
+      "full": {
+        "seed": 42,
+        "case": "full",
+        "accuracy_percent": 83.54898336414048,
+        "delta_sp_percent": 5.5555555555555545,
+        "split_labels_degree_sha256": "ed29f43a497b3d1fcbe78d73764ca3d8f171c28902cf9806c4ef2dd8e0bda60c",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-42",
+        "best_validation_epoch": 197
+      },
+      "none": {
+        "seed": 42,
+        "case": "none",
+        "accuracy_percent": 86.50646950092421,
+        "delta_sp_percent": 5.5555555555555545,
+        "split_labels_degree_sha256": "ed29f43a497b3d1fcbe78d73764ca3d8f171c28902cf9806c4ef2dd8e0bda60c",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-42",
+        "best_validation_epoch": 197
+      }
+    },
+    {
+      "seed": 43,
+      "full": {
+        "seed": 43,
+        "case": "full",
+        "accuracy_percent": 87.24584103512015,
+        "delta_sp_percent": 3.968253968253969,
+        "split_labels_degree_sha256": "129027fef924bbc360eb0c8dd1997e283d7f6268f79015c9a361fe4e89429490",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-43",
+        "best_validation_epoch": 192
+      },
+      "none": {
+        "seed": 43,
+        "case": "none",
+        "accuracy_percent": 86.50646950092421,
+        "delta_sp_percent": 5.555555555555556,
+        "split_labels_degree_sha256": "129027fef924bbc360eb0c8dd1997e283d7f6268f79015c9a361fe4e89429490",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-43",
+        "best_validation_epoch": 152
+      }
+    },
+    {
+      "seed": 44,
+      "full": {
+        "seed": 44,
+        "case": "full",
+        "accuracy_percent": 81.51571164510166,
+        "delta_sp_percent": 5.820105820105819,
+        "split_labels_degree_sha256": "cdd4aeb6a780234473f381351e5ac2493d4e5473b973ae615683709eb6bcc496",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-44",
+        "best_validation_epoch": 192
+      },
+      "none": {
+        "seed": 44,
+        "case": "none",
+        "accuracy_percent": 87.43068391866913,
+        "delta_sp_percent": 4.761904761904762,
+        "split_labels_degree_sha256": "cdd4aeb6a780234473f381351e5ac2493d4e5473b973ae615683709eb6bcc496",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-44",
+        "best_validation_epoch": 196
+      }
+    },
+    {
+      "seed": 45,
+      "full": {
+        "seed": 45,
+        "case": "full",
+        "accuracy_percent": 84.65804066543437,
+        "delta_sp_percent": 4.761904761904762,
+        "split_labels_degree_sha256": "2e6a034d0b8ddd1a889eca514758c657ed24c20b17ffc6bdbd0775e32c5ee1aa",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-45",
+        "best_validation_epoch": 145
+      },
+      "none": {
+        "seed": 45,
+        "case": "none",
+        "accuracy_percent": 86.50646950092421,
+        "delta_sp_percent": 3.9682539682539675,
+        "split_labels_degree_sha256": "2e6a034d0b8ddd1a889eca514758c657ed24c20b17ffc6bdbd0775e32c5ee1aa",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-45",
+        "best_validation_epoch": 197
+      }
+    },
+    {
+      "seed": 46,
+      "full": {
+        "seed": 46,
+        "case": "full",
+        "accuracy_percent": 84.28835489833642,
+        "delta_sp_percent": 5.82010582010582,
+        "split_labels_degree_sha256": "4115c14c7154ca66db96252aaba3a918975ad822ce30e979ed2e4366e708cc0e",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-46",
+        "best_validation_epoch": 165
+      },
+      "none": {
+        "seed": 46,
+        "case": "none",
+        "accuracy_percent": 85.39741219963032,
+        "delta_sp_percent": 5.555555555555556,
+        "split_labels_degree_sha256": "4115c14c7154ca66db96252aaba3a918975ad822ce30e979ed2e4366e708cc0e",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-46",
+        "best_validation_epoch": 166
+      }
+    },
+    {
+      "seed": 47,
+      "full": {
+        "seed": 47,
+        "case": "full",
+        "accuracy_percent": 83.54898336414048,
+        "delta_sp_percent": 7.671957671957672,
+        "split_labels_degree_sha256": "51cec353be8e8d473b02b3bb964b25683db79035a510c2236c74aefa9a4a8699",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-47",
+        "best_validation_epoch": 150
+      },
+      "none": {
+        "seed": 47,
+        "case": "none",
+        "accuracy_percent": 85.02772643253235,
+        "delta_sp_percent": 5.026455026455027,
+        "split_labels_degree_sha256": "51cec353be8e8d473b02b3bb964b25683db79035a510c2236c74aefa9a4a8699",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-47",
+        "best_validation_epoch": 137
+      }
+    },
+    {
+      "seed": 48,
+      "full": {
+        "seed": 48,
+        "case": "full",
+        "accuracy_percent": 83.3641404805915,
+        "delta_sp_percent": 9.523809523809524,
+        "split_labels_degree_sha256": "41b93cbb23164bed1cc815515c397ae80bcef222aed358d93e1e6b1faea1ba7f",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-48",
+        "best_validation_epoch": 163
+      },
+      "none": {
+        "seed": 48,
+        "case": "none",
+        "accuracy_percent": 81.1460258780037,
+        "delta_sp_percent": 8.730158730158731,
+        "split_labels_degree_sha256": "41b93cbb23164bed1cc815515c397ae80bcef222aed358d93e1e6b1faea1ba7f",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-48",
+        "best_validation_epoch": 200
+      }
+    },
+    {
+      "seed": 49,
+      "full": {
+        "seed": 49,
+        "case": "full",
+        "accuracy_percent": 85.39741219963032,
+        "delta_sp_percent": 4.232804232804233,
+        "split_labels_degree_sha256": "05a4f1a571f724e7de853698ccc418397ad256bd1c6e6b4ef3a501760ab5aae1",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-49",
+        "best_validation_epoch": 172
+      },
+      "none": {
+        "seed": 49,
+        "case": "none",
+        "accuracy_percent": 83.73382624768946,
+        "delta_sp_percent": 3.1746031746031735,
+        "split_labels_degree_sha256": "05a4f1a571f724e7de853698ccc418397ad256bd1c6e6b4ef3a501760ab5aae1",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-49",
+        "best_validation_epoch": 186
+      }
+    },
+    {
+      "seed": 50,
+      "full": {
+        "seed": 50,
+        "case": "full",
+        "accuracy_percent": 80.96118299445472,
+        "delta_sp_percent": 8.994708994708994,
+        "split_labels_degree_sha256": "83d2b270b887bfad1bad237a8278101f6c0622c67cb819a3b81f747e998cb197",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-50",
+        "best_validation_epoch": 174
+      },
+      "none": {
+        "seed": 50,
+        "case": "none",
+        "accuracy_percent": 80.77634011090574,
+        "delta_sp_percent": 9.25925925925926,
+        "split_labels_degree_sha256": "83d2b270b887bfad1bad237a8278101f6c0622c67cb819a3b81f747e998cb197",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-50",
+        "best_validation_epoch": 166
+      }
+    },
+    {
+      "seed": 51,
+      "full": {
+        "seed": 51,
+        "case": "full",
+        "accuracy_percent": 85.39741219963032,
+        "delta_sp_percent": 3.968253968253969,
+        "split_labels_degree_sha256": "da225e68139ed45ec44af3f474df9f3f2d2118b38f81fe2d61a119546d6b6812",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-baseline-10/seed-51",
+        "best_validation_epoch": 193
+      },
+      "none": {
+        "seed": 51,
+        "case": "none",
+        "accuracy_percent": 86.32162661737523,
+        "delta_sp_percent": 3.1746031746031744,
+        "split_labels_degree_sha256": "da225e68139ed45ec44af3f474df9f3f2d2118b38f81fe2d61a119546d6b6812",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-ablation-10/none-p3/seed-51",
+        "best_validation_epoch": 200
+      }
+    },
+    {
+      "seed": 52,
+      "full": {
+        "seed": 52,
+        "case": "full",
+        "accuracy_percent": 85.58225508317929,
+        "delta_sp_percent": 9.25925925925926,
+        "split_labels_degree_sha256": "1c03eed5c98a965e153d65b7928e11fb6e10f6d270f3dc7606616604ee8ea380",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-52",
+        "best_validation_epoch": 164
+      },
+      "none": {
+        "seed": 52,
+        "case": "none",
+        "accuracy_percent": 86.32162661737523,
+        "delta_sp_percent": 7.936507936507938,
+        "split_labels_degree_sha256": "1c03eed5c98a965e153d65b7928e11fb6e10f6d270f3dc7606616604ee8ea380",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-52",
+        "best_validation_epoch": 159
+      }
+    },
+    {
+      "seed": 53,
+      "full": {
+        "seed": 53,
+        "case": "full",
+        "accuracy_percent": 86.50646950092421,
+        "delta_sp_percent": 6.349206349206349,
+        "split_labels_degree_sha256": "5461e715e18357e046f2fc8838c61d021a05f3ceea28a4c4398d93aa2c220571",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-53",
+        "best_validation_epoch": 174
+      },
+      "none": {
+        "seed": 53,
+        "case": "none",
+        "accuracy_percent": 85.39741219963032,
+        "delta_sp_percent": 5.5555555555555545,
+        "split_labels_degree_sha256": "5461e715e18357e046f2fc8838c61d021a05f3ceea28a4c4398d93aa2c220571",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-53",
+        "best_validation_epoch": 154
+      }
+    },
+    {
+      "seed": 54,
+      "full": {
+        "seed": 54,
+        "case": "full",
+        "accuracy_percent": 78.9279112754159,
+        "delta_sp_percent": 6.084656084656084,
+        "split_labels_degree_sha256": "9360a03f8023c9ab7ff2d08b0d0288fcb8c4b1e6378bfcc4290a72640ce2fd0b",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-54",
+        "best_validation_epoch": 200
+      },
+      "none": {
+        "seed": 54,
+        "case": "none",
+        "accuracy_percent": 83.1792975970425,
+        "delta_sp_percent": 3.4391534391534395,
+        "split_labels_degree_sha256": "9360a03f8023c9ab7ff2d08b0d0288fcb8c4b1e6378bfcc4290a72640ce2fd0b",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-54",
+        "best_validation_epoch": 195
+      }
+    },
+    {
+      "seed": 55,
+      "full": {
+        "seed": 55,
+        "case": "full",
+        "accuracy_percent": 83.3641404805915,
+        "delta_sp_percent": 8.730158730158728,
+        "split_labels_degree_sha256": "191ac30158b549e973545ba902fd8801be4152edbac3c759f05f08dfaae70f8b",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-55",
+        "best_validation_epoch": 197
+      },
+      "none": {
+        "seed": 55,
+        "case": "none",
+        "accuracy_percent": 85.58225508317929,
+        "delta_sp_percent": 7.142857142857142,
+        "split_labels_degree_sha256": "191ac30158b549e973545ba902fd8801be4152edbac3c759f05f08dfaae70f8b",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-55",
+        "best_validation_epoch": 145
+      }
+    },
+    {
+      "seed": 56,
+      "full": {
+        "seed": 56,
+        "case": "full",
+        "accuracy_percent": 79.85212569316081,
+        "delta_sp_percent": 6.613756613756613,
+        "split_labels_degree_sha256": "6666807bad57a9ec7cb83bce95708a89a8cb4fcb1e1863e41be6a856ee7bf74d",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-56",
+        "best_validation_epoch": 174
+      },
+      "none": {
+        "seed": 56,
+        "case": "none",
+        "accuracy_percent": 85.95194085027727,
+        "delta_sp_percent": 5.555555555555556,
+        "split_labels_degree_sha256": "6666807bad57a9ec7cb83bce95708a89a8cb4fcb1e1863e41be6a856ee7bf74d",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-56",
+        "best_validation_epoch": 172
+      }
+    },
+    {
+      "seed": 57,
+      "full": {
+        "seed": 57,
+        "case": "full",
+        "accuracy_percent": 83.3641404805915,
+        "delta_sp_percent": 7.4074074074074066,
+        "split_labels_degree_sha256": "513bff8c12cee8005debf08cef62e190a3de415fae9d7df674828c5ae8178d2c",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-57",
+        "best_validation_epoch": 179
+      },
+      "none": {
+        "seed": 57,
+        "case": "none",
+        "accuracy_percent": 81.88539741219964,
+        "delta_sp_percent": 5.8201058201058204,
+        "split_labels_degree_sha256": "513bff8c12cee8005debf08cef62e190a3de415fae9d7df674828c5ae8178d2c",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-57",
+        "best_validation_epoch": 156
+      }
+    },
+    {
+      "seed": 58,
+      "full": {
+        "seed": 58,
+        "case": "full",
+        "accuracy_percent": 84.65804066543437,
+        "delta_sp_percent": 8.465608465608465,
+        "split_labels_degree_sha256": "332118e245013d4b23996c5bf0b7bc3520b09d20ddb1754b31fd32c52ffe7694",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-58",
+        "best_validation_epoch": 179
+      },
+      "none": {
+        "seed": 58,
+        "case": "none",
+        "accuracy_percent": 86.32162661737523,
+        "delta_sp_percent": 8.465608465608467,
+        "split_labels_degree_sha256": "332118e245013d4b23996c5bf0b7bc3520b09d20ddb1754b31fd32c52ffe7694",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-58",
+        "best_validation_epoch": 151
+      }
+    },
+    {
+      "seed": 59,
+      "full": {
+        "seed": 59,
+        "case": "full",
+        "accuracy_percent": 83.3641404805915,
+        "delta_sp_percent": 6.613756613756613,
+        "split_labels_degree_sha256": "42b0ed637aaa7834e43c4219fca2c7a7b147d9f5c2fa5a5c6a9781d41219c6f9",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-59",
+        "best_validation_epoch": 192
+      },
+      "none": {
+        "seed": 59,
+        "case": "none",
+        "accuracy_percent": 84.28835489833642,
+        "delta_sp_percent": 5.555555555555556,
+        "split_labels_degree_sha256": "42b0ed637aaa7834e43c4219fca2c7a7b147d9f5c2fa5a5c6a9781d41219c6f9",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-59",
+        "best_validation_epoch": 157
+      }
+    },
+    {
+      "seed": 60,
+      "full": {
+        "seed": 60,
+        "case": "full",
+        "accuracy_percent": 79.48243992606284,
+        "delta_sp_percent": 4.232804232804233,
+        "split_labels_degree_sha256": "f9950bee2acaa2f11a3b6bffa86f0ad6360dce1eb241ea21491b71738b0f18ca",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-60",
+        "best_validation_epoch": 143
+      },
+      "none": {
+        "seed": 60,
+        "case": "none",
+        "accuracy_percent": 86.69131238447319,
+        "delta_sp_percent": 3.968253968253969,
+        "split_labels_degree_sha256": "f9950bee2acaa2f11a3b6bffa86f0ad6360dce1eb241ea21491b71738b0f18ca",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-60",
+        "best_validation_epoch": 195
+      }
+    },
+    {
+      "seed": 61,
+      "full": {
+        "seed": 61,
+        "case": "full",
+        "accuracy_percent": 82.80961182994456,
+        "delta_sp_percent": 5.291005291005291,
+        "split_labels_degree_sha256": "8904489110e517eb9562fa963eb97ff5ee1fbe4f1af4ff6949ccaba9515251f6",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-61",
+        "best_validation_epoch": 200
+      },
+      "none": {
+        "seed": 61,
+        "case": "none",
+        "accuracy_percent": 88.72458410351202,
+        "delta_sp_percent": 4.497354497354497,
+        "split_labels_degree_sha256": "8904489110e517eb9562fa963eb97ff5ee1fbe4f1af4ff6949ccaba9515251f6",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-61",
+        "best_validation_epoch": 199
+      }
+    },
+    {
+      "seed": 62,
+      "full": {
+        "seed": 62,
+        "case": "full",
+        "accuracy_percent": 87.61552680221811,
+        "delta_sp_percent": 3.1746031746031744,
+        "split_labels_degree_sha256": "8af0d04c947158b0faefe0c057f1cfb9c25e4f092a28bd55e1d36fe51c60dabd",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-62",
+        "best_validation_epoch": 200
+      },
+      "none": {
+        "seed": 62,
+        "case": "none",
+        "accuracy_percent": 86.13678373382625,
+        "delta_sp_percent": 3.703703703703703,
+        "split_labels_degree_sha256": "8af0d04c947158b0faefe0c057f1cfb9c25e4f092a28bd55e1d36fe51c60dabd",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-62",
+        "best_validation_epoch": 200
+      }
+    },
+    {
+      "seed": 63,
+      "full": {
+        "seed": 63,
+        "case": "full",
+        "accuracy_percent": 85.58225508317929,
+        "delta_sp_percent": 4.761904761904763,
+        "split_labels_degree_sha256": "084eff00924778803722bd0d4ff9e71bd36395fe35201fe03ecfc757c2a8c33b",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-63",
+        "best_validation_epoch": 189
+      },
+      "none": {
+        "seed": 63,
+        "case": "none",
+        "accuracy_percent": 83.91866913123845,
+        "delta_sp_percent": 4.232804232804233,
+        "split_labels_degree_sha256": "084eff00924778803722bd0d4ff9e71bd36395fe35201fe03ecfc757c2a8c33b",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-63",
+        "best_validation_epoch": 191
+      }
+    },
+    {
+      "seed": 64,
+      "full": {
+        "seed": 64,
+        "case": "full",
+        "accuracy_percent": 78.18853974121997,
+        "delta_sp_percent": 4.4973544973544985,
+        "split_labels_degree_sha256": "52a46ad4f469849a6a9d28e7f1c7e2ab6f7a9271c9386d4296eaa6e7db315444",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-64",
+        "best_validation_epoch": 197
+      },
+      "none": {
+        "seed": 64,
+        "case": "none",
+        "accuracy_percent": 85.58225508317929,
+        "delta_sp_percent": 5.5555555555555545,
+        "split_labels_degree_sha256": "52a46ad4f469849a6a9d28e7f1c7e2ab6f7a9271c9386d4296eaa6e7db315444",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-64",
+        "best_validation_epoch": 178
+      }
+    },
+    {
+      "seed": 65,
+      "full": {
+        "seed": 65,
+        "case": "full",
+        "accuracy_percent": 80.0369685767098,
+        "delta_sp_percent": 2.9100529100529093,
+        "split_labels_degree_sha256": "ab0598d2b031e0944664804a6b3310aa631c3c43dbe09223792f56a6b7b7852c",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-65",
+        "best_validation_epoch": 200
+      },
+      "none": {
+        "seed": 65,
+        "case": "none",
+        "accuracy_percent": 85.76709796672827,
+        "delta_sp_percent": 2.1164021164021163,
+        "split_labels_degree_sha256": "ab0598d2b031e0944664804a6b3310aa631c3c43dbe09223792f56a6b7b7852c",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-65",
+        "best_validation_epoch": 200
+      }
+    },
+    {
+      "seed": 66,
+      "full": {
+        "seed": 66,
+        "case": "full",
+        "accuracy_percent": 84.65804066543437,
+        "delta_sp_percent": 4.497354497354498,
+        "split_labels_degree_sha256": "05373940e38875570e8a92140e790d7bfd3ec6116b7e65e19a07e091158fcf64",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-66",
+        "best_validation_epoch": 177
+      },
+      "none": {
+        "seed": 66,
+        "case": "none",
+        "accuracy_percent": 79.11275415896488,
+        "delta_sp_percent": 5.82010582010582,
+        "split_labels_degree_sha256": "05373940e38875570e8a92140e790d7bfd3ec6116b7e65e19a07e091158fcf64",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-66",
+        "best_validation_epoch": 200
+      }
+    },
+    {
+      "seed": 67,
+      "full": {
+        "seed": 67,
+        "case": "full",
+        "accuracy_percent": 83.73382624768946,
+        "delta_sp_percent": 6.613756613756613,
+        "split_labels_degree_sha256": "8b815ada0c7fc58361bbf05053d9edb2545d0ba810101f3dd61ced25cc96ffbe",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-67",
+        "best_validation_epoch": 197
+      },
+      "none": {
+        "seed": 67,
+        "case": "none",
+        "accuracy_percent": 86.32162661737523,
+        "delta_sp_percent": 6.084656084656085,
+        "split_labels_degree_sha256": "8b815ada0c7fc58361bbf05053d9edb2545d0ba810101f3dd61ced25cc96ffbe",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-67",
+        "best_validation_epoch": 153
+      }
+    },
+    {
+      "seed": 68,
+      "full": {
+        "seed": 68,
+        "case": "full",
+        "accuracy_percent": 84.28835489833642,
+        "delta_sp_percent": 7.936507936507935,
+        "split_labels_degree_sha256": "b44d2933dcf1409ffbe71253892169580789518ca69e00998288882a2dc61206",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-68",
+        "best_validation_epoch": 183
+      },
+      "none": {
+        "seed": 68,
+        "case": "none",
+        "accuracy_percent": 86.50646950092421,
+        "delta_sp_percent": 6.613756613756612,
+        "split_labels_degree_sha256": "b44d2933dcf1409ffbe71253892169580789518ca69e00998288882a2dc61206",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-68",
+        "best_validation_epoch": 179
+      }
+    },
+    {
+      "seed": 69,
+      "full": {
+        "seed": 69,
+        "case": "full",
+        "accuracy_percent": 84.4731977818854,
+        "delta_sp_percent": 6.084656084656084,
+        "split_labels_degree_sha256": "205d6a7facfd31fba213f8269067b55ee6a315908b9c6d1d2b9dd3ccc87c1942",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-69",
+        "best_validation_epoch": 200
+      },
+      "none": {
+        "seed": 69,
+        "case": "none",
+        "accuracy_percent": 83.73382624768946,
+        "delta_sp_percent": 5.291005291005291,
+        "split_labels_degree_sha256": "205d6a7facfd31fba213f8269067b55ee6a315908b9c6d1d2b9dd3ccc87c1942",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-69",
+        "best_validation_epoch": 185
+      }
+    },
+    {
+      "seed": 70,
+      "full": {
+        "seed": 70,
+        "case": "full",
+        "accuracy_percent": 84.4731977818854,
+        "delta_sp_percent": 2.9100529100529102,
+        "split_labels_degree_sha256": "badec0fee183d72b1bff108e1f60f9a55c0c30f81cd9c29ec1cdc5b6b32c792b",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-70",
+        "best_validation_epoch": 176
+      },
+      "none": {
+        "seed": 70,
+        "case": "none",
+        "accuracy_percent": 85.76709796672827,
+        "delta_sp_percent": 4.232804232804233,
+        "split_labels_degree_sha256": "badec0fee183d72b1bff108e1f60f9a55c0c30f81cd9c29ec1cdc5b6b32c792b",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-70",
+        "best_validation_epoch": 196
+      }
+    },
+    {
+      "seed": 71,
+      "full": {
+        "seed": 71,
+        "case": "full",
+        "accuracy_percent": 85.21256931608133,
+        "delta_sp_percent": 5.291005291005291,
+        "split_labels_degree_sha256": "8711a2c7fc03134bae1fddbb5838cec5809a31c148b1510262f5b03227da631e",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/full-p3/seed-71",
+        "best_validation_epoch": 181
+      },
+      "none": {
+        "seed": 71,
+        "case": "none",
+        "accuracy_percent": 82.0702402957486,
+        "delta_sp_percent": 5.026455026455027,
+        "split_labels_degree_sha256": "8711a2c7fc03134bae1fddbb5838cec5809a31c148b1510262f5b03227da631e",
+        "output": "/workspace/my-codex-project/reproduction/runs/cora-paired-30/none-p3/seed-71",
+        "best_validation_epoch": 196
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+loading dgl...
+networkx: number edges: 10556
+loading dgl, done, DGL graph edges: 10556
+{
+  "seed": 42,
+  "parameter": "embedding_h.weight",
+  "scope": "One shared initial forward; component gradients include beta=0.5; no optimizer step.",
+  "profiles": {
+    "raw_sum_flattened_L2_per_N": {
+      "loss_values": {
+        "transition": 12341659.0,
+        "feature": 0.2818687856197357,
+        "augmentation": 350400.0
+      },
+      "weighted_component_gradient_norms": {
+        "transition": 12306628.0,
+        "feature": 0.04547659307718277
+      },
+      "transition_to_feature_gradient_norm_ratio": 270614555.0330303
+    },
+    "transition_mean_feature_MSE": {
+      "loss_values": {
+        "transition": 0.5609897971153259,
+        "feature": 0.1501661241054535,
+        "augmentation": 350400.0
+      },
+      "weighted_component_gradient_norms": {
+        "transition": 0.5593971610069275,
+        "feature": 0.04844704270362854
+      },
+      "transition_to_feature_gradient_norm_ratio": 11.546569817047477
+    }
+  },
+  "matches_baseline_first_forward_loss_terms": true
+}

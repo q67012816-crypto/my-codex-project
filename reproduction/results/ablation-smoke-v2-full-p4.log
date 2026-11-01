@@ -1,0 +1,147 @@
+loading dgl...
+networkx: number edges: 10556
+loading dgl, done, DGL graph edges: 10556
+{
+  "effective_config": {
+    "layers": 4,
+    "heads": 4,
+    "clusters": 5,
+    "dropout": 0.1,
+    "hidden_dim": 64,
+    "lr": 0.0001,
+    "weight_decay": 1e-05,
+    "alpha": 1.0,
+    "beta1": 0.5,
+    "beta2": 0.5,
+    "xi": 0.8,
+    "zeta": 0.2,
+    "transition_steps": 3
+  },
+  "actual_layers": 4
+}
+{"phase": "pretrain", "epoch": 1, "loss": 8657270.0, "transition": 16613740.0, "feature": 0.2818687856197357, "augmentation": 350400.0, "augmentation_has_gradient": false}
+{"phase": "pretrain", "epoch": 2, "loss": 8115368.0, "transition": 15503536.0, "feature": 0.27592819929122925, "augmentation": 363600.0, "augmentation_has_gradient": false}
+Loading Transformer_class reproduction/runs/ablation-smoke-v2-full-p4/pretrained.pt
+{"phase": "finetune", "epoch": 1, "loss": 1.9430772066116333, "validation_accuracy": 0.11645101755857468}
+{"phase": "finetune", "epoch": 2, "loss": 1.9408079385757446, "validation_accuracy": 0.1182994470000267}
+{"phase": "finetune", "epoch": 3, "loss": 1.9382600784301758, "validation_accuracy": 0.16266173124313354}
+{
+  "model": "CGT controlled ablation",
+  "case": "full",
+  "switches": {
+    "aug": 1,
+    "sim": 1,
+    "phi": 1
+  },
+  "reconstruction_steps": 4,
+  "structural_transition_steps": 3,
+  "sampler": "fast",
+  "upstream_commit": "948f25477eb0253873ffdf6d38fcf53f258fdd83",
+  "purpose": "paper-parameter alignment; remaining implementation differences documented",
+  "dataset": "Cora",
+  "seed": 42,
+  "device": "cpu",
+  "nodes": 2708,
+  "features": 1433,
+  "directed_edges": 10556,
+  "split_counts": {
+    "train": 1626,
+    "validation": 541,
+    "test": 541
+  },
+  "pretrain_epochs": 2,
+  "finetune_epochs": 3,
+  "effective_config": {
+    "layers": 4,
+    "heads": 4,
+    "clusters": 5,
+    "dropout": 0.1,
+    "hidden_dim": 64,
+    "lr": 0.0001,
+    "weight_decay": 1e-05,
+    "alpha": 1.0,
+    "beta1": 0.5,
+    "beta2": 0.5,
+    "xi": 0.8,
+    "zeta": 0.2,
+    "transition_steps": 3
+  },
+  "actual_attention_layers": 4,
+  "cache_key": "e8093fc5d33410b2",
+  "pretraining_loss_reduction": "paper sums; unsquared flattened feature L2 / N",
+  "finetune_epochs_source": "working choice; not specified by paper",
+  "remaining_deviations": [
+    "upstream augmentation uses fixed probabilities and nondifferentiable edge indices; BCE has no trainable gradient",
+    "upstream classification applies softmax before cross entropy",
+    "upstream structural filtering/attention have not been fully reimplemented from equations",
+    "feature norm interpreted as flattened L2; BCE uses PyTorch endpoint clamp"
+  ],
+  "best_validation_epoch": 3,
+  "best_validation_accuracy": 0.16266173124313354,
+  "test_accuracy": 0.17560073733329773,
+  "delta_sp": 0.018518518518518517,
+  "delta_sp_percent": 1.8518518518518516,
+  "delta_sp_status": "Eq. (17), r=1, floor and node-id tie policy; see fairness.json",
+  "elapsed_seconds": 4.236649808999573,
+  "history": [
+    {
+      "phase": "pretrain",
+      "epoch": 1,
+      "loss": 8657270.0,
+      "transition": 16613740.0,
+      "feature": 0.2818687856197357,
+      "augmentation": 350400.0,
+      "augmentation_has_gradient": false
+    },
+    {
+      "phase": "pretrain",
+      "epoch": 2,
+      "loss": 8115368.0,
+      "transition": 15503536.0,
+      "feature": 0.27592819929122925,
+      "augmentation": 363600.0,
+      "augmentation_has_gradient": false
+    },
+    {
+      "phase": "finetune",
+      "epoch": 1,
+      "loss": 1.9430772066116333,
+      "validation_accuracy": 0.11645101755857468
+    },
+    {
+      "phase": "finetune",
+      "epoch": 2,
+      "loss": 1.9408079385757446,
+      "validation_accuracy": 0.1182994470000267
+    },
+    {
+      "phase": "finetune",
+      "epoch": 3,
+      "loss": 1.9382600784301758,
+      "validation_accuracy": 0.16266173124313354
+    }
+  ],
+  "versions": {
+    "python": "3.10.22",
+    "torch": "2.0.1+cpu",
+    "pyg": "2.3.1",
+    "dgl": "1.1.2"
+  },
+  "raw_data_sha256": {
+    "ind.cora.allx": "9419ba2f26f5c35243db64aba110e0f35a04851609e0dc5433450676ca6b8543",
+    "ind.cora.ally": "2b998f5cc7fedc86e7f97ca2498f47a1ffc1462c29e2d578b23bf3f62b6e7d71",
+    "ind.cora.graph": "58f13302f39dde8852dad6fe6d15b89b077b6d7f837626bce671ef80344b383d",
+    "ind.cora.test.index": "297ce89af2b51a6a194181c7dbe1796c6a1cf9cd9349a88383b1b1e227867875",
+    "ind.cora.tx": "b9afbaa4a400df991f6f02ef677e1e44da55ffc04801fd02f9e673987829226a",
+    "ind.cora.ty": "41f5ac76596a1699cc33f53084a2419e92961c42bb75f36fc38e616d348532ad",
+    "ind.cora.x": "23cfa55d91c6f624233f5eb7b6e3f141f1bd2b2ae39608a63cf5d084bb27baab",
+    "ind.cora.y": "94465c14eb53e04ca262198dcbb2521ee8af60fb3f3d546cd6ca24a511b0e7d1"
+  },
+  "source_sha256": {
+    "train_ablation.py": "569c02b7ed34bf9990c39d17259612b8b67a45d4cc04b56c0db29765a95a5241",
+    "ablation_protocol.py": "988c8f9998654f073762c4a3cf4fe8965a51d5d34e87539839e08f39c9e63605",
+    "paper_protocol.py": "86d901185db1e40829b25fda06cfddd472c5780e56bd70ab3d0bb52dc21dfe74",
+    "vendor/cgt/models.py": "88763c772109a93a560e699e3da27f4a8d97311ce957f4f78c5e6ee370ae7056",
+    "vendor/cgt/util.py": "b64a8d7379932213c066a9041cab9f60c45f05b7d000480574124242b04f6e23"
+  }
+}

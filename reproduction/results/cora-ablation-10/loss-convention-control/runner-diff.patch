@@ -1,0 +1,46 @@
+--- train_ablation.py
++++ train_loss_control.py
+@@ -24,7 +24,8 @@
+ from models import Transformer, Transformer_class
+ from util import get_A_D, getM_logM, get_B_sim_phi, load_dgl
+ from paper_protocol import CONFIG, config_dict, degree_statistical_parity
+-from ablation_protocol import CASES, build_variant, assert_flags, variant_loss
++from ablation_protocol import CASES, build_variant, assert_flags
++from loss_convention_control import normalized_reconstruction_loss as variant_loss
+ 
+ 
+ def main():
+@@ -35,7 +36,7 @@
+     parser.add_argument('--sampler', choices=['fast','reference'], default='fast')
+     parser.add_argument('--pretrain-epochs', type=int, default=500)
+     parser.add_argument('--finetune-epochs', type=int, default=200)
+-    parser.add_argument('--output', type=Path, default=ROOT / 'runs' / 'ablation-smoke')
++    parser.add_argument('--output', type=Path, default=ROOT / 'runs' / 'loss-convention-control')
+     args = parser.parse_args()
+     if min(args.pretrain_epochs, args.finetune_epochs) < 1:
+         parser.error('both training phases require at least one epoch')
+@@ -173,12 +174,13 @@
+                   directed_edges=data.num_edges, split_counts={k: int(v.sum()) for k,v in masks.items()},
+                   pretrain_epochs=args.pretrain_epochs, finetune_epochs=args.finetune_epochs,
+                   effective_config=config_dict(), actual_attention_layers=len(model.layers),
+-                  cache_key=cache_key, pretraining_loss_reduction='paper sums; unsquared flattened feature L2 / N',
++                  cache_key=cache_key, pretraining_loss_reduction='transition sum / (p*N*N) and feature MSE; probability BCE unchanged',
++                  control_profile='reconstruction normalization only; not an exact replay of original full training code',
+                   finetune_epochs_source='working choice; not specified by paper',
+                   remaining_deviations=['upstream augmentation uses fixed probabilities and nondifferentiable edge indices; BCE has no trainable gradient',
+                                         'upstream classification applies softmax before cross entropy',
+                                         'upstream structural filtering/attention have not been fully reimplemented from equations',
+-                                        'feature norm interpreted as flattened L2; BCE uses PyTorch endpoint clamp'],
++                                        'normalized reconstruction control uses transition mean and feature MSE; BCE endpoint clamp remains'],
+                   best_validation_epoch=best_epoch, best_validation_accuracy=best_acc,
+                   test_accuracy=test_acc, delta_sp=fairness['delta_sp'],
+                   delta_sp_percent=fairness['delta_sp_percent'],
+@@ -188,7 +190,7 @@
+                                 pyg=torch_geometric.__version__, dgl=dgl.__version__),
+                   raw_data_sha256=raw_hashes)
+     result['source_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+-                               for name in ['train_ablation.py', 'ablation_protocol.py', 'paper_protocol.py',
++                               for name in ['train_loss_control.py', 'loss_convention_control.py', 'ablation_protocol.py', 'paper_protocol.py',
+                                             'vendor/cgt/models.py', 'vendor/cgt/util.py']}
+     (args.output / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
+     progress('completed', args.finetune_epochs, args.finetune_epochs,

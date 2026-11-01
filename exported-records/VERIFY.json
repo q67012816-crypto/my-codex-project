@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "archives": [
+    {
+      "archive": "cgt-complete-records.tar.gz",
+      "files": 1054,
+      "all_payload_sha256_verified": true
+    },
+    {
+      "archive": "cgt-analysis-records.zip",
+      "files": 763,
+      "all_payload_sha256_verified": true
+    }
+  ],
+  "table_counts": {
+    "result_records": 126,
+    "epoch_records": 76080,
+    "evaluation_files": 110,
+    "node_prediction_rows": 297880,
+    "unsupported_evaluations": [],
+    "notes": [
+      "Records include smoke/diagnostic runs; do not pool every row as independent paper trials.",
+      "No new inference. Grid candidate test metrics remain absent except selected/reference existing files."
+    ]
+  },
+  "no_training_or_inference": true,
+  "scientific_binary_and_analysis_files_unchanged": 277
+}

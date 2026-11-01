@@ -1,0 +1,74 @@
+{
+  "model": "CGT",
+  "upstream_commit": "948f25477eb0253873ffdf6d38fcf53f258fdd83",
+  "purpose": "CPU smoke test; not a paper reproduction",
+  "dataset": "Cora",
+  "seed": 42,
+  "device": "cpu",
+  "nodes": 2708,
+  "features": 1433,
+  "directed_edges": 10556,
+  "split_counts": {
+    "train": 1626,
+    "validation": 541,
+    "test": 541
+  },
+  "pretrain_epochs": 2,
+  "finetune_epochs": 3,
+  "learning_rate": 0.0001,
+  "hidden_dim": 64,
+  "num_layers_argument": 4,
+  "num_heads": 4,
+  "best_validation_epoch": 3,
+  "best_validation_accuracy": 0.2550831735134125,
+  "test_accuracy": 0.21626617014408112,
+  "delta_sp": null,
+  "delta_sp_status": "unverified: upstream has no implementation; paper access blocked",
+  "elapsed_seconds": 6.435671808000052,
+  "history": [
+    {
+      "phase": "pretrain",
+      "epoch": 1,
+      "loss": 1.285790073814517
+    },
+    {
+      "phase": "pretrain",
+      "epoch": 2,
+      "loss": 1.2422344944919792
+    },
+    {
+      "phase": "finetune",
+      "epoch": 1,
+      "loss": 1.9474276304244995,
+      "validation_accuracy": 0.13308687508106232
+    },
+    {
+      "phase": "finetune",
+      "epoch": 2,
+      "loss": 1.9455426931381226,
+      "validation_accuracy": 0.20332717895507812
+    },
+    {
+      "phase": "finetune",
+      "epoch": 3,
+      "loss": 1.941956877708435,
+      "validation_accuracy": 0.2550831735134125
+    }
+  ],
+  "versions": {
+    "python": "3.10.22",
+    "torch": "2.0.1+cpu",
+    "pyg": "2.3.1",
+    "dgl": "1.1.2"
+  },
+  "raw_data_sha256": {
+    "ind.cora.allx": "9419ba2f26f5c35243db64aba110e0f35a04851609e0dc5433450676ca6b8543",
+    "ind.cora.ally": "2b998f5cc7fedc86e7f97ca2498f47a1ffc1462c29e2d578b23bf3f62b6e7d71",
+    "ind.cora.graph": "58f13302f39dde8852dad6fe6d15b89b077b6d7f837626bce671ef80344b383d",
+    "ind.cora.test.index": "297ce89af2b51a6a194181c7dbe1796c6a1cf9cd9349a88383b1b1e227867875",
+    "ind.cora.tx": "b9afbaa4a400df991f6f02ef677e1e44da55ffc04801fd02f9e673987829226a",
+    "ind.cora.ty": "41f5ac76596a1699cc33f53084a2419e92961c42bb75f36fc38e616d348532ad",
+    "ind.cora.x": "23cfa55d91c6f624233f5eb7b6e3f141f1bd2b2ae39608a63cf5d084bb27baab",
+    "ind.cora.y": "94465c14eb53e04ca262198dcbb2521ee8af60fb3f3d546cd6ca24a511b0e7d1"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "pretrain_epochs": 500,
+  "finetune_epochs": 200,
+  "source_sha256": {
+    "train_ablation.py": "569c02b7ed34bf9990c39d17259612b8b67a45d4cc04b56c0db29765a95a5241",
+    "ablation_protocol.py": "988c8f9998654f073762c4a3cf4fe8965a51d5d34e87539839e08f39c9e63605",
+    "paper_protocol.py": "86d901185db1e40829b25fda06cfddd472c5780e56bd70ab3d0bb52dc21dfe74",
+    "vendor/cgt/models.py": "88763c772109a93a560e699e3da27f4a8d97311ce957f4f78c5e6ee370ae7056",
+    "vendor/cgt/util.py": "b64a8d7379932213c066a9041cab9f60c45f05b7d000480574124242b04f6e23"
+  },
+  "original_baseline_sources": {
+    "train_cora.py": "3eee205a6bff6b3d5d42d6f65fc4be784d770459dc38e2eb6ddd9790deeccb9b",
+    "paper_protocol.py": "86d901185db1e40829b25fda06cfddd472c5780e56bd70ab3d0bb52dc21dfe74",
+    "vendor/cgt/models.py": "88763c772109a93a560e699e3da27f4a8d97311ce957f4f78c5e6ee370ae7056",
+    "vendor/cgt/util.py": "b64a8d7379932213c066a9041cab9f60c45f05b7d000480574124242b04f6e23"
+  },
+  "groups": [
+    "none-p3",
+    "attention-p3",
+    "augmentation-p3",
+    "full-p3",
+    "full-p4"
+  ],
+  "required_new_runs": 40,
+  "structural_transition_steps": 3,
+  "sensitivity": "p=4 changes only reconstruction targets; B/sim/phi and structural search stay at k=3",
+  "flags": {
+    "none": [
+      0,
+      0,
+      0
+    ],
+    "attention": [
+      0,
+      1,
+      1
+    ],
+    "augmentation": [
+      1,
+      0,
+      0
+    ],
+    "full": [
+      1,
+      1,
+      1
+    ]
+  },
+  "reference_reuse": "full-p3 uses existing independently verified ten-seed baseline",
+  "sampler": "fixed Bernoulli threshold; gated by complete seed42 original-RNG equivalence check",
+  "std": "sample ddof=1; population std also saved",
+  "paper_targets": {
+    "none-p3": [
+      84.81,
+      5.88
+    ],
+    "attention-p3": [
+      85.54,
+      4.85
+    ],
+    "augmentation-p3": [
+      84.95,
+      3.53
+    ],
+    "full-p3": [
+      87.1,
+      3.46
+    ]
+  }
+}

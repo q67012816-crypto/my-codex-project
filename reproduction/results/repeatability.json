@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "seed": 42,
+  "identical_predictions": true,
+  "identical_state_dict": true,
+  "identical_metrics_and_losses": true
+}
