@@ -1,0 +1,109 @@
+{
+  "original_filename": "recent-models-and-tensors.zip",
+  "bytes": 388999360,
+  "sha256": "74e9cd0c9b191ccad831d8cb566ada375215779d2b771fb31ea1429db495f263",
+  "parts": [
+    {
+      "name": "models.zip.part-001",
+      "bytes": 24000000,
+      "sha256": "48fd0b0a5ebd3fb0f8d8d7bdd7ede6f7f450c88017f21e4aca65c6a00856fb38",
+      "git_blob_sha1": "637c68a12b4cef4dc5c7f79d7c5baf12b61a7602"
+    },
+    {
+      "name": "models.zip.part-002",
+      "bytes": 24000000,
+      "sha256": "8da0a3d4b351714b893ba9fbd8a1fba2fe5c957f28a7c38f338aeb73eee247c3",
+      "git_blob_sha1": "a56bd8fd7d320eea47ecd66a5d7387648ab1312f"
+    },
+    {
+      "name": "models.zip.part-003",
+      "bytes": 24000000,
+      "sha256": "4d24a39f210a3b036c1d79930d9183f4f92f47fc53b02456a2aee8384a693731",
+      "git_blob_sha1": "4ca75b92c4103e133fb8a623d07b6529aad5cfcc"
+    },
+    {
+      "name": "models.zip.part-004",
+      "bytes": 24000000,
+      "sha256": "28c8a7c5ea95189f5447a10d69c5d87bf65b3b1171d6caf662c3c5ccad3a6517",
+      "git_blob_sha1": "1304d8ae19e60479d5cc9b41f16b442e42d880b0"
+    },
+    {
+      "name": "models.zip.part-005",
+      "bytes": 24000000,
+      "sha256": "425d5f34409eddb54c83bd7cdd6ea4ca6bf9a4adcd520c55623328748a6e7904",
+      "git_blob_sha1": "de62a3a6ece987f2962226614dc937ba1b3b71db"
+    },
+    {
+      "name": "models.zip.part-006",
+      "bytes": 24000000,
+      "sha256": "16c0b48dc204baf62208e5f7dd91752425bad2778830746b506dc23874f779b0",
+      "git_blob_sha1": "4da12aa58bc586aa2498674a1ae4fe12fec13b8a"
+    },
+    {
+      "name": "models.zip.part-007",
+      "bytes": 24000000,
+      "sha256": "e0259479556ddc081c3b58063ca8fa93a44d91797632976abd526c98e0ecf132",
+      "git_blob_sha1": "46e4720f004268b307c1a45e0a9b834c665b20f6"
+    },
+    {
+      "name": "models.zip.part-008",
+      "bytes": 24000000,
+      "sha256": "96ecaa521602f54b7205c2e0382da12bebb2e633fe52e486d8cbff70152ea1d2",
+      "git_blob_sha1": "a6de924bf3d6e7116d9808ad22aa97899fd4c843"
+    },
+    {
+      "name": "models.zip.part-009",
+      "bytes": 24000000,
+      "sha256": "4d1c4cf4ba98102307a57238a0bff4b70c86f3c9dccfe1f1df3f248409beeb72",
+      "git_blob_sha1": "8435e15bbae6918293f9a8dd741949d1cc18e855"
+    },
+    {
+      "name": "models.zip.part-010",
+      "bytes": 24000000,
+      "sha256": "aa773e69214503559d15fb1194c66381785cf4e996a69f9343a6ae2b7dbcf94a",
+      "git_blob_sha1": "0362d89142f71579054af89a233bb999fb4ffc63"
+    },
+    {
+      "name": "models.zip.part-011",
+      "bytes": 24000000,
+      "sha256": "5f78188b85e60809b8b52e59f6eedbdf34bd1c8f6705ab98b07a21db2df46147",
+      "git_blob_sha1": "eb62c572babfff199fbf834d27cbf17434131d2a"
+    },
+    {
+      "name": "models.zip.part-012",
+      "bytes": 24000000,
+      "sha256": "3ef4a5446b7f60d46c6717b9cfc76ba253369ed87fb7d3b635403ae6d80b2493",
+      "git_blob_sha1": "239ba678d839b5cec158d6c8158cf8922afa1d14"
+    },
+    {
+      "name": "models.zip.part-013",
+      "bytes": 24000000,
+      "sha256": "03d5ab90535714da420bc639c787da5b5af9ae98a7951d44efa57cbf12c65351",
+      "git_blob_sha1": "540cf6aae30f054ee86a80c8657b371a7d2b0514"
+    },
+    {
+      "name": "models.zip.part-014",
+      "bytes": 24000000,
+      "sha256": "fbbc6e65b89fd555fd44b45aeae41ca5ffb0f284a01e781a787b8c3ed9280842",
+      "git_blob_sha1": "00520bbe3d7850b1633a51c3205c0806327d2a5a"
+    },
+    {
+      "name": "models.zip.part-015",
+      "bytes": 24000000,
+      "sha256": "821012dac027adf3992582c7fe04949b1c4ed4f298c1e7d8a1a49f45014e4349",
+      "git_blob_sha1": "0a9375ed9d8d19a0f7fda0468e000865154a7028"
+    },
+    {
+      "name": "models.zip.part-016",
+      "bytes": 24000000,
+      "sha256": "e39e48ff00ec672519be7b6b042c505b46ff06a3387adb39c71b4e47f71cf405",
+      "git_blob_sha1": "87e98d0edc8f6494dff4304cd60f06dfe5ba121b"
+    },
+    {
+      "name": "models.zip.part-017",
+      "bytes": 4999360,
+      "sha256": "829f4315fc060b77d8dca0f2ff85696d44a566f2f3b221987d916e5c40bdfa1d",
+      "git_blob_sha1": "ea548694ac76ab7e0386e2e39410013797b16c21"
+    }
+  ]
+}

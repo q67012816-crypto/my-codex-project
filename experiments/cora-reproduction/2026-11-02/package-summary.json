@@ -1,0 +1,17 @@
+{
+  "experiments": [
+    "loss-calibration-20261102",
+    "pcgrad-augmentation-20261102",
+    "joint-augmentation-classification-20261102",
+    "joint-augmentation-confirmation-20261102",
+    "classification-bce-20261102",
+    "fixed-prior-matched-20261102"
+  ],
+  "metrics_rows": 62,
+  "per_class_rows": 434,
+  "prediction_rows": 33542,
+  "original_pt_paths": 118,
+  "unique_pt_objects": 100,
+  "new_training_or_test_performed": false,
+  "elapsed_seconds": 63.56142238
+}
